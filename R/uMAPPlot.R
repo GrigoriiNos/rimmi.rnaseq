@@ -2,12 +2,20 @@
 #'
 #' This function allows you in addition to plot your clustering results in 2 uMAPs dimentions
 #' @param Seurat_obj your Seurat object
+#'
 #' @param title title for your plot
+#'
+#' @return ggplot2 object, umap plot
+#'
 #' @keywords Seurat, single cell sequencing, RNA-seq, uMAP, dimentionality reduction
-#' @export
+#'
 #' @examples
+#'
 #' Seurat_obj <- Run_uMAP(Seurat_obj)
 #' uMAPPlot(Seurat_obj, sample_name = 'b06')
+#'
+#' @export
+#'
 
 
 uMAPPlot <- function(Seurat_obj, sample_name = 'X'){

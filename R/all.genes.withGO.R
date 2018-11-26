@@ -1,11 +1,19 @@
 #' Get all genes with partiular GO
 #'
 #' This function allows you to get a list of genes from the biomaRt database that have a GO of your choice.
+#'
 #' @param GO a GO term that you want to get all genes with
+#'
+#' @return vector of genes that are involved in GO that was put as an argument
+#'
 #' @keywords GO, all genes with GO
-#' @export
+#'
 #' @examples
+#'
 #' all.genes.withGO("GO:0008217")
+#'
+#' @export
+#'
 
 all.genes.withGO <- function(GO){
   ensembl = biomaRt::useMart("ensembl",dataset="hsapiens_gene_ensembl") #uses human ensembl annotations

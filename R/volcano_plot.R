@@ -1,12 +1,20 @@
 #' plor volcano plot
 #'
 #' This function allows you to vizualise differential expression analisys for bulk stidy by volcano plot
+#'
 #' @param edgeR_output your edgeR output
+#'
 #' @param title the name of your plot
+#'
+#' @return volcano plot
+#'
 #' @keywords DEG, differential expression analysis, volcano plot
-#' @export
+#'
 #' @examples
+#'
 #' volcano_plot(edgeR_output)
+#'
+#' @export
 
 volcano_plot <- function(edgeR_output, title = 'volcano plot'){
   edgeR_output
