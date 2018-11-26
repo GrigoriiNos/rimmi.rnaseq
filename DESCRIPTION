@@ -1,0 +1,13 @@
+Package: rimmi.rnaseq
+Title: Set of functions for genomics data analysis
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Grigorii",
+           family = "Nos",
+           role = c("aut", "cre"),
+           email = "grigorii.nos@cpr.ku.dk")
+Description: Set of handy functions for genomics data analysis for use in RIMMI project.
+License: for internal use in the Søren Brunak's lab
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
