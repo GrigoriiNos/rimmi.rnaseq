@@ -12,10 +12,10 @@ Depends:
     R (>= 3.1),
     qtl (>= 1.30-4)
 Imports:
-    Seurat
-    dplyr
-    biomaRt
-    gProgileR
+    Seurat,
+    dplyr,
+    biomaRt,
+    gProfileR,
     umap
 License: for internal use in the Brunak's lab
 Encoding: UTF-8
