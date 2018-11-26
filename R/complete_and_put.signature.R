@@ -5,7 +5,6 @@
 #' @param Seurat_obj your Seurat object
 #' @param title the name of your gene set
 #' @keywords GO, KEGG, HPA, single cell, RNA-seq
-#' @import Seurat
 #' @export
 #' @examples
 #' put_signature(markers = c("CCL21", "CCL19", "TNFSF13B"), Seurat_obj = human_stromal, title = "T-zone markers")
@@ -18,6 +17,7 @@
 
 # put gene signatures as new rows to the gene_cell matrix and
 put_signature <- function(markers, Seurat_obj, title){
+  library(Seurat)
   ### function to have a complete list of markers
   complete <- function(markers, Seurat_obj) {
     markers <-  as.character(markers[complete.cases(markers)])

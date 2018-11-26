@@ -4,12 +4,13 @@
 #' @param markers_table The output of the Seurat::FndAllMarkers function, don't change anything in the column names within it.
 #' @param filename
 #' @keywords excel, single cell, RNA-seq, Seurat, markers
-#' @import dplyr
 #' @export
 #' @examples
 #' annotate_markers(my_markers, "stromal_markers")
 
 markers_to_xls <- function(markers_table, filename = 'my_markers'){
+  library(dplyr)
+  ###
   clusters <- 0:(length(
     unique(markers_table$cluster))-1
   )

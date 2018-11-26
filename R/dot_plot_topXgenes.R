@@ -5,14 +5,15 @@
 #' @param X How much of the genes you need to analyse in each cluster. 5 is a default.
 #' @param Seurat_obj your Seurat object to plot markers from
 #' @keywords dot plot, Seurat, markers, single cell sequencing, RNA-seq
-#' @import dplyr
-#' @import Seurat
 #' @export
 #' @examples
 #' dot_plot_topXgenes(markers, 10)
 
 
 dot_plot_topXgenes <- function(markers_table, X = 5, Seurat_obj){
+  library(Seurat)
+  library(dplyr)
+
   ###
   plot_top_X_genes <- function(markers_table, X = 5){
     top_X <- markers_table %>%

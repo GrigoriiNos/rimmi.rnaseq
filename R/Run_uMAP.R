@@ -3,16 +3,14 @@
 #' This function allows you in addition to classical dimentionality reductions approaches as tSNE and PCA calculate also uMAP and embedd it to your Seurat object in the dr slot.
 #' @param Seurat_obj your Seurat object
 #' @keywords Seurat, single cell sequencing, RNA-seq, uMAP, dimentionality reduction
-#' @import umap
-#' @import Seurat
-#' @import umap
-#' @import RColorBrewer
 #' @export
 #' @examples
 #' Seurat_obj <- Run_uMAP(Seurat_obj)
 #' uMAPPlot(Seurat_obj, sample_name = 'b06')
 
 Run_uMAP <- function(Seurat_obj, variable_genes = TRUE){
+  library(umap)
+  library(Seurat)
   ### get expression matrix
   if (variable_genes == T) {
     exp.matrix <- Seurat_obj@data[Seurat_obj@var.genes,]

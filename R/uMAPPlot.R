@@ -4,9 +4,6 @@
 #' @param Seurat_obj your Seurat object
 #' @param title title for your plot
 #' @keywords Seurat, single cell sequencing, RNA-seq, uMAP, dimentionality reduction
-#' @import Seurat
-#' @import umap
-#' @import RColorBrewer
 #' @export
 #' @examples
 #' Seurat_obj <- Run_uMAP(Seurat_obj)
@@ -14,6 +11,9 @@
 
 
 uMAPPlot <- function(Seurat_obj, sample_name = 'X'){
+  library(Seurat)
+  library(dplyr)
+  library(ggplot2)
   #get the cells names
   Seurat_obj_labels <- as.character(
     unname(Seurat_obj@ident)
