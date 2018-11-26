@@ -13,10 +13,14 @@ put_signature(markers, Seurat_obj, title)
 
 \item{title}{the name of your gene set}
 }
+\value{
+Seurat object with new feature, your gene set average expression
+}
 \description{
 This function allows you to calculate an average expression for the list of genes of your interest.
 }
 \examples{
+
 put_signature(markers = c("CCL21", "CCL19", "TNFSF13B"), Seurat_obj = human_stromal, title = "T-zone markers")
 to plot it use FeaturePlot function with min and ,ax cutoff parameters being q3 and q97, it helps you to vizualise it without noise
 FeaturePlot(Seurat_obj,
@@ -24,6 +28,7 @@ FeaturePlot(Seurat_obj,
 cols.use = c("grey", "blue"),
 min.cutoff = "q3",
 max.cutoff = "q97")
+
 }
 \keyword{GO,}
 \keyword{HPA,}

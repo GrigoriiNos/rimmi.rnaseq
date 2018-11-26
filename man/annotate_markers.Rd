@@ -13,11 +13,16 @@ annotate_markers(markers_table, X = 50, organism = "hsapiens")
 
 \item{organism}{What species you work with? "mmusculus" and "hsapiens" is available in gProfiler. Human is a default.}
 }
+\value{
+table with annotation for each cluster
+}
 \description{
 This function allows you to get multiple functional annotations for DE genes for each cell cluster using a Seurat::FindAllMarkers function output
 }
 \examples{
+
 annotate_markers(stromal_markers)
+
 }
 \keyword{GO,}
 \keyword{HPA,}

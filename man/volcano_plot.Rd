@@ -11,11 +11,16 @@ volcano_plot(edgeR_output, title = "volcano plot")
 
 \item{title}{the name of your plot}
 }
+\value{
+volcano plot
+}
 \description{
 This function allows you to vizualise differential expression analisys for bulk stidy by volcano plot
 }
 \examples{
+
 volcano_plot(edgeR_output)
+
 }
 \keyword{DEG,}
 \keyword{analysis,}

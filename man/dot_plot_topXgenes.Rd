@@ -17,7 +17,9 @@ dot_plot_topXgenes(markers_table, X = 5, Seurat_obj)
 This function allows you to plot each top X DEG for each cell cluster using a Seurat::FindAllMarkers function output
 }
 \examples{
+
 dot_plot_topXgenes(markers, 10)
+
 }
 \keyword{RNA-seq}
 \keyword{Seurat,}

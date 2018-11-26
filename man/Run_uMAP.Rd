@@ -9,12 +9,17 @@ Run_uMAP(Seurat_obj, variable_genes = TRUE)
 \arguments{
 \item{Seurat_obj}{your Seurat object}
 }
+\value{
+Seurat object with new dimentionality reduction slot
+}
 \description{
 This function allows you in addition to classical dimentionality reductions approaches as tSNE and PCA calculate also uMAP and embedd it to your Seurat object in the dr slot.
 }
 \examples{
+
 Seurat_obj <- Run_uMAP(Seurat_obj)
 uMAPPlot(Seurat_obj, sample_name = 'b06')
+
 }
 \keyword{RNA-seq,}
 \keyword{Seurat,}

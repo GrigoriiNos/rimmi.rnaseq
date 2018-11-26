@@ -8,12 +8,16 @@ markers_to_xls(markers_table, filename = "my_markers")
 }
 \arguments{
 \item{markers_table}{The output of the Seurat::FndAllMarkers function, don't change anything in the column names within it.}
+
+\item{filename}{}
 }
 \description{
 This function allows you write Seurat::FindAllMarkers function output into the excel file having each cluster markers written in the distinct sheet
 }
 \examples{
+
 annotate_markers(my_markers, "stromal_markers")
+
 }
 \keyword{RNA-seq,}
 \keyword{Seurat,}

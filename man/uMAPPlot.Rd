@@ -11,12 +11,17 @@ uMAPPlot(Seurat_obj, sample_name = "X")
 
 \item{title}{title for your plot}
 }
+\value{
+ggplot2 object, umap plot
+}
 \description{
 This function allows you in addition to plot your clustering results in 2 uMAPs dimentions
 }
 \examples{
+
 Seurat_obj <- Run_uMAP(Seurat_obj)
 uMAPPlot(Seurat_obj, sample_name = 'b06')
+
 }
 \keyword{RNA-seq,}
 \keyword{Seurat,}
