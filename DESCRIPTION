@@ -1,12 +1,21 @@
 Package: rimmi.rnaseq
 Title: Set of functions for genomics data analysis
 Version: 0.0.0.9000
+Date: 2018-26-11
 Authors@R: 
     person(given = "Grigorii",
            family = "Nos",
            role = c("aut", "cre"),
            email = "grigorii.nos@cpr.ku.dk")
 Description: Set of handy functions for genomics data analysis for use in RIMMI project.
+Depends:
+    R (>= 3.1),
+    qtl (>= 1.30-4)
+    Seurat
+    dplyr
+    biomaRt
+    gProgileR
+    umap
 License: for internal use in the Brunak's lab
 Encoding: UTF-8
 LazyData: true
