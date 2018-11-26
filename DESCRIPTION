@@ -11,6 +11,7 @@ Description: Set of handy functions for genomics data analysis for use in RIMMI 
 Depends:
     R (>= 3.1),
     qtl (>= 1.30-4)
+Imports:
     Seurat
     dplyr
     biomaRt
