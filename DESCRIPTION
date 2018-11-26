@@ -16,7 +16,8 @@ Imports:
     dplyr,
     biomaRt,
     gProfileR,
-    umap
+    umap,
+    WriteXLS
 License: for internal use in the Brunak's lab
 Encoding: UTF-8
 LazyData: true
