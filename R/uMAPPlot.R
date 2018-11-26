@@ -22,28 +22,13 @@ uMAPPlot <- function(Seurat_obj, sample_name = 'X'){
   library(Seurat)
   library(dplyr)
   library(ggplot2)
-  #get the cells names
-  Seurat_obj_labels <- as.character(
-    unname(Seurat_obj@ident)
-  )
-
-  #select the colours
-  cols<-brewer.pal(n=length(
-    unique(Seurat_obj_labels)
-  ),
-  name="Set3")
-
-  names(cols) <- unique(Seurat_obj_labels)
-  for (i in 1:length(cols)){
-    Seurat_obj_labels[Seurat_obj_labels == names(cols)[i]] <- cols[i]
-  }
-  # plot it!
+  # data frame with 2 dims of dr umap and cell labels
   to_plot <- data_frame(umap1 = Seurat_obj@dr$uMAP$layout[,1],
-                       umap2 = Seurat_obj@dr$uMAP$layout[,2],
-                   cells = as.character(
-                     unname(Seurat_obj@ident)
-                   ))
-
+                        umap2 = Seurat_obj@dr$uMAP$layout[,2],
+                        cells = as.character(unname(
+                          Seurat_obj@ident)
+                        ))
+  # plot it!
   ggplot(to_plot, aes(x = umap1, y = umap2, col = cells))+
     geom_point()+
     ggtitle(paste0('uMAP plot for ', sample_name))+
