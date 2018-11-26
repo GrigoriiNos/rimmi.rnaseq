@@ -18,6 +18,12 @@ This function allows you to calculate an average expression for the list of gene
 }
 \examples{
 put_signature(markers = c("CCL21", "CCL19", "TNFSF13B"), Seurat_obj = human_stromal, title = "T-zone markers")
+to plot it use FeaturePlot function with min and ,ax cutoff parameters being q3 and q97, it helps you to vizualise it without noise
+FeaturePlot(Seurat_obj,
+"T-zone markers",
+cols.use = c("grey", "blue"),
+min.cutoff = "q3",
+max.cutoff = "q97")
 }
 \keyword{GO,}
 \keyword{HPA,}
