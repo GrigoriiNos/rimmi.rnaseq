@@ -31,7 +31,7 @@ put_signature <- function(markers, Seurat_obj, title){
   ### function to have a complete list of markers
   complete <- function(markers, Seurat_obj) {
     markers <-  as.character(markers[complete.cases(markers)])
-    markers[markers %in% rownames(Seurat_Seurat_obj@data)]
+    markers[markers %in% rownames(Seurat_obj@data)]
   }
   ### convert it to complete list
   markers <- complete(markers, Seurat_obj)
