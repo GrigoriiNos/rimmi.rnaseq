@@ -22,7 +22,7 @@ This function allows you to calculate an average expression for the list of gene
 \examples{
 
 Seurat_obj <- put_signature(markers = c("CCL21", "CCL19", "TNFSF13B"),
-                           Seurat_obj = Seurat_obj,
+                          Seurat_obj = Seurat_obj,
                            title = "T-zone markers")
 
 ## to plot it use FeaturePlot function with min and ,ax cutoff parameters being q3 and q97, it helps you to vizualise it without noise
