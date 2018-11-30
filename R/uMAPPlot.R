@@ -23,8 +23,8 @@ uMAPPlot <- function(Seurat_obj, sample_name = 'X'){
   library(dplyr)
   library(ggplot2)
   # data frame with 2 dims of dr umap and cell labels
-  to_plot <- data_frame(umap1 = Seurat_obj@dr$uMAP$layout[,1],
-                        umap2 = Seurat_obj@dr$uMAP$layout[,2],
+  to_plot <- data_frame(umap1 = Seurat_obj@dr$umap$layout[,1],
+                        umap2 = Seurat_obj@dr$umap$layout[,2],
                         cells = as.character(unname(
                           Seurat_obj@ident)
                         ))
