@@ -4,10 +4,14 @@
 \alias{Run_uMAP}
 \title{Calculate uMAP for Seurat object}
 \usage{
-Run_uMAP(Seurat_obj, variable_genes = TRUE)
+Run_uMAP(Seurat_obj, dims = 10, method = "naive")
 }
 \arguments{
 \item{Seurat_obj}{your Seurat object}
+
+\item{dims}{how many of pca dimentions you want to use, 10 is default}
+
+\item{method}{method for umap manifold calculation, can be, "naive" or "umap-learn". Naive method is default. Further reading is in ??umap::umap}
 }
 \value{
 Seurat object with new dimentionality reduction slot
