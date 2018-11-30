@@ -3,6 +3,8 @@
 #' This function allows you in addition to classical dimentionality reductions approaches as tSNE and PCA calculate also uMAP and embedd it to your Seurat object in the dr slot.
 #'
 #' @param Seurat_obj your Seurat object
+#' @param dims how many of pca dimentions you want to use, 10 is default
+#' @param method method for umap manifold calculation, can be, "naive" or "umap-learn". Naive method is default. Further reading is in ??umap::umap
 #'
 #' @return Seurat object with new dimentionality reduction slot
 #'
@@ -16,23 +18,20 @@
 #' @export
 #'
 
-Run_uMAP <- function(Seurat_obj, variable_genes = TRUE){
+Run_uMAP <- function(Seurat_obj, dims = 10, method = 'naive'){
   library(umap)
   library(Seurat)
-  ### get expression matrix
-  if (variable_genes == T) {
-    exp.matrix <- Seurat_obj@data[Seurat_obj@var.genes,]
-  } else {
-    exp.matrix <- Seurat_obj@data
-  }
+  ### get pca of expression matrix
+  pca <- GetDimReduction(object = Seurat_obj,
+                         reduction.type = 'pca',
+                         slot = 'cell.embeddings')
+
 
   print('started to calculate uMAPs, can take up to 1 hour')
   ### calculate uMAPs
   Seurat_obj_map <- umap(
-    t(as.matrix(
-      exp.matrix)
-    )
-  )
+    pca[,1:dims],
+    method = method)
 
   ### put umap into the new slot
   Seurat_obj@dr$umap <- Seurat_obj_map
