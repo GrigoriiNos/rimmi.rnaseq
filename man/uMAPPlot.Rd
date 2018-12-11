@@ -4,7 +4,7 @@
 \alias{uMAPPlot}
 \title{Plot uMAP in 2 dimentions}
 \usage{
-uMAPPlot(Seurat_obj, sample_name = "X")
+uMAPPlot(Seurat_obj, sample_name = "X", col = "clusters")
 }
 \arguments{
 \item{Seurat_obj}{your Seurat object}
