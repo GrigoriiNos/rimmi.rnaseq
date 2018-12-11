@@ -4,6 +4,8 @@
 #' @param Seurat_obj your Seurat object
 #'
 #' @param title title for your plot
+#' @param sample_name sample name
+#' @param col should be 'clusters' if you want to colour cells according to the clustering, change on 'samples' for colouring according to the batches.
 #'
 #' @return ggplot2 object, umap plot
 #'
