@@ -9,6 +9,10 @@ uMAPPlot(Seurat_obj, sample_name = "X", col = "clusters")
 \arguments{
 \item{Seurat_obj}{your Seurat object}
 
+\item{sample_name}{sample name}
+
+\item{col}{should be 'clusters' if you want to colour cells according to the clustering, change on 'samples' for colouring according to the batches.}
+
 \item{title}{title for your plot}
 }
 \value{
