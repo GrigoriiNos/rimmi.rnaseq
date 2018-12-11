@@ -18,18 +18,28 @@
 #'
 
 
-uMAPPlot <- function(Seurat_obj, sample_name = 'X'){
+uMAPPlot <- function(Seurat_obj,
+                     sample_name = 'X',
+                     col = 'clusters'){
   library(Seurat)
   library(dplyr)
   library(ggplot2)
   # data frame with 2 dims of dr umap and cell labels
   to_plot <- data_frame(umap1 = Seurat_obj@dr$umap$layout[,1],
                         umap2 = Seurat_obj@dr$umap$layout[,2],
-                        cells = as.character(unname(
-                          Seurat_obj@ident)
-                        ))
+                        )
+
+  if (col == 'clusters')
+  {
+  to_plot$cols <-  as.character(unname(
+                        Seurat_obj@ident)
+                        )
+  } else {
+    to_plot$cols <- Seurat_obj@meta.data$protocol
+  }
+
   # plot it!
-  ggplot(to_plot, aes(x = umap1, y = umap2, col = cells))+
+  ggplot(to_plot, aes(x = umap1, y = umap2, col = cols))+
     geom_point()+
     ggtitle(paste0('uMAP plot for ', sample_name))+
     guides(colour = guide_legend(override.aes = list(size=8)))+
