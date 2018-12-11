@@ -4,7 +4,7 @@
 \alias{Run_uMAP}
 \title{Calculate uMAP for Seurat object}
 \usage{
-Run_uMAP(Seurat_obj, dims = 10, method = "naive")
+Run_uMAP(Seurat_obj, dims = 10, method = "naive", CCA = F)
 }
 \arguments{
 \item{Seurat_obj}{your Seurat object}
@@ -12,12 +12,14 @@ Run_uMAP(Seurat_obj, dims = 10, method = "naive")
 \item{dims}{how many of pca dimentions you want to use, 10 is default}
 
 \item{method}{method for umap manifold calculation, can be, "naive" or "umap-learn". Naive method is default. Further reading is in ??umap::umap}
+
+\item{CCA}{set TRUE of you want to build uMAPs on the CCAs dimentionality rediction}
 }
 \value{
 Seurat object with new dimentionality reduction slot
 }
 \description{
-This function allows you in addition to classical dimentionality reductions approaches as tSNE and PCA calculate also uMAP and embedd it to your Seurat object in the dr slot.
+This function allows you in addition to canonical dimentionality reductions approache as tSNE calculate also uMAP and embedd it to your Seurat object in the dr slot, can be used for visualisation of the cell clusters.
 }
 \examples{
 
