@@ -20,7 +20,7 @@ Imports:
     WriteXLS,
     ggplot2,
     plotly
-License: for internal use in the Søren Brunak's lab
+License: for internal use in the Brunak's lab
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
