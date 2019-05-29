@@ -19,6 +19,7 @@
 
 umap_plot3d <- function(obj, dims = 10){
   library(plotly)
+  library(Seurat)
   # recalculate umaps with 3 dimensions
   if (is.null(obj@dr$cca.aligned)){
     obj <- RunUMAP(obj, 
