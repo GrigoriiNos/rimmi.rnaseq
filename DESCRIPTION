@@ -18,8 +18,9 @@ Imports:
     gProfileR,
     umap,
     WriteXLS,
-    ggplot2
-License: for internal use in the Brunak's lab
+    ggplot2,
+    plotly
+License: for internal use in the Søren Brunak's lab
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
