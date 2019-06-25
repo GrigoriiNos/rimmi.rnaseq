@@ -4,7 +4,7 @@
 \alias{Gene_contribution}
 \title{Calculate the contribution of each gene for the given gene signature}
 \usage{
-Gene_contribution(Seurat_obj, ident, signature)
+Gene_contribution(Seurat_obj, ident, signature, signature_name)
 }
 \arguments{
 \item{Seurat_obj}{your Seurat object}
