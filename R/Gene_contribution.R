@@ -13,7 +13,7 @@
 #'
 #' @examples
 #'
-#' Gene_contribution(A07, 7, blooddata[[1]])
+#' Gene_contribution(A07, 0.6, signature, 'sLZ')
 #'
 #' @export
 #'
