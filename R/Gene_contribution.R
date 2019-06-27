@@ -23,7 +23,7 @@ Gene_contribution <- function(Seurat_obj,
                               resolution,
                               signature,
                               signature_name){
-  library(gplots)
+
   library(Seurat)
 
   sign_index <- which(rownames(Seurat_obj@data) == signature_name)
