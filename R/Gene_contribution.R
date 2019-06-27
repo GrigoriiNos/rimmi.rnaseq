@@ -48,9 +48,7 @@ Gene_contribution <- function(Seurat_obj,
     break
   }
 
-  signature <- unique(intersect(
-    signature, rownames(Seurat_obj@data))
-    )
+  signature <- signature[signature %in% rownames(Seurat_obj@data)]
 
   output <- data.frame(genes = signature)
   for (i in 1:length(ident)){
