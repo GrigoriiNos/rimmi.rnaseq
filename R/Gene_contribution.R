@@ -22,7 +22,7 @@
 Gene_contribution <- function(Seurat_obj,
                               resolution,
                               signature,
-                              signature_name{
+                              signature_name){
   library(gplots)
   library(Seurat)
 
@@ -42,9 +42,15 @@ Gene_contribution <- function(Seurat_obj,
     ident <- sort(
       unique(
         Seurat_obj@meta.data$res.2))
-  } else{
-    print('nonono pick either 06 or 1 or 2 resolution')
   }
+  if (!resolution %in% c(0.6, 1, 2)){
+    print('nono please use only resolution 0.6 1 or 2')
+    break
+  }
+
+  signature <- unique(intersect(
+    signature, rownames(Seurat_obj@data))
+    )
 
   output <- data.frame(genes = signature)
   for (i in 1:length(ident)){
