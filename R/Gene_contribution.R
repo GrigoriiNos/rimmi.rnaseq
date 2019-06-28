@@ -50,7 +50,8 @@ Gene_contribution <- function(Seurat_obj,
 
   signature <- signature[signature %in% rownames(Seurat_obj@data)]
 
-  output <- data.frame(genes = signature)
+  output1 <- data.frame(genes = signature)
+  output2 <- data.frame(genes = signature)
   for (i in 1:length(ident)){
   # make an object subset with the given cluster
   sub_Seurat_obj <- SubsetData(Seurat_obj,
@@ -61,6 +62,7 @@ Gene_contribution <- function(Seurat_obj,
   # take a percentage for each gene into a vector
     for (j in 1:length(signature)){
 
+      # contibution of genes from the signature
       gene_index <- which(rownames(sub_Seurat_obj@data) == signature[j])
 
       scaler <- max(
@@ -73,7 +75,7 @@ Gene_contribution <- function(Seurat_obj,
       q <- sum(gene_contrib) / length(gene_contrib)
 
       genes_percentage <- c(genes_percentage, q)
-    }
+      }
 
   names(genes_percentage) <- signature
   # scale it
@@ -82,21 +84,44 @@ Gene_contribution <- function(Seurat_obj,
          decreasing = T)
   )
 
-  df <- data.frame(
+  df1 <- data.frame(
     genes = rownames(genes_percentage),
     data = unname(genes_percentage[,1])
   )
-  colnames(df)[2] <- paste('cluster', ident[i])
-  output <- merge(output, df, 'genes')
+  colnames(df1)[2] <- paste('cluster', ident[i])
+  output1 <- merge(output1, df1, 'genes')
+
+  #the average expression per clsuter for a given gene
+  genes_average <- rowSums(
+    sub_Seurat_obj@data[rownames(sub_Seurat_obj@data) %in% signature, ]
+  ) / ncol(sub_Seurat_obj@data)
+
+  df2 <- data.frame(
+    genes = names(genes_average),
+    data = unname(genes_average)
+  )
+
+  colnames(df2)[2] <- paste('cluster', ident[i])
+  output2 <- merge(output2, df2, 'genes')
+
   }
-  write.csv(output,
+
+  rownames(output1) <- output1$genes
+  rownames(output2) <- output2$genes
+
+  write.csv(output1,
             quote = F,
             file = paste0('genes from the ',signature_name, ' signature, resolution', resolution, '.csv')
             )
 
-  rownames(output) <- output$genes
+  write.csv(output2,
+            quote = F,
+            file = paste0('average gene exp from the ',signature_name, ' signature, resolution', resolution, '.csv')
+  )
 
   heatmap(
-    as.matrix(output[,-1])
+    as.matrix(output1[,-1])
     )
 }
+
+
