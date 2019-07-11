@@ -4,14 +4,16 @@
 \alias{Gene_contribution}
 \title{Calculate the contribution of each gene for the given gene signature}
 \usage{
-Gene_contribution(Seurat_obj, ident, signature, signature_name)
+Gene_contribution(Seurat_obj, resolution, signature, signature_name)
 }
 \arguments{
 \item{Seurat_obj}{your Seurat object}
 
-\item{ident}{number of cluster you want to look at}
+\item{resolution}{what resolution you wanna check, either 0.6 or 1 or 2}
 
 \item{signature}{the gene set of your interest}
+
+\item{signature_name}{the name you gave to the signature}
 }
 \value{
 heatmap with the gene contribution
@@ -21,7 +23,7 @@ This function allows you to see how did each gene from the given transcriptional
 }
 \examples{
 
-Gene_contribution(A07, 7, blooddata[[1]])
+Gene_contribution(A07, 0.6, signature, 'sLZ')
 
 }
 \keyword{RNA-seq,}
