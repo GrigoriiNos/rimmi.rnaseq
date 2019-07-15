@@ -17,6 +17,7 @@
 
 scatter_libdepth <- function(Seurat_obj){
   library(ggplot2)
+  library(cowplot)
 
   df <- data.frame(umap1 = Seurat_obj@dr$umap@cell.embeddings[,1 ],
                    umap2 = Seurat_obj@dr$umap@cell.embeddings[,2 ],
