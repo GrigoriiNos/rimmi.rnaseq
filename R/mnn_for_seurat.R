@@ -39,8 +39,14 @@ mnn_for_seurat <- function(merged_object){
                                     cos.norm.in = TRUE,
                                     svd.dim = 2)
 
-  corrected <- cbind(be_corrected$corrected[[1]],
-                     be_corrected$corrected[[2]]
+  batch11 <- be_corrected$corrected[[1]]
+  batch22 <- be_corrected$corrected[[2]]
+
+  colnames(batch11) <- colnames(batch1)
+  colnames(batch22) <- colnames(batch2)
+
+  corrected <- cbind(batch11,
+                     batch22
                      )
 
   merged_object@data <- corrected
