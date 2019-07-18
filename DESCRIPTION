@@ -20,7 +20,9 @@ Imports:
     umap,
     WriteXLS,
     ggplot2,
-    plotly
+    plotly,
+    sva,
+    scran
 License: for internal use in the Soren Brunak's lab
 Encoding: UTF-8
 LazyData: true
