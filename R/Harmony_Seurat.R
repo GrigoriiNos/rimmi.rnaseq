@@ -31,9 +31,7 @@ harmony_for_seurat <- function(merged_object){
   
   samples <- unique(merged_object@meta.data$orig.ident)
   
-  pca <- GetDimReduction(merged_object, 
-                         reduction.type = 'pca', 
-                         slot = 'cell.embeddings')
+  pca <- merged_object@dr$pca@cell.embeddings
   
   harmony_emb <- HarmonyMatrix(pca, 
                                umi.qc.endog$batch, 
