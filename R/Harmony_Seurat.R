@@ -37,7 +37,7 @@ harmony_for_seurat <- function(merged_object){
                                merged_object@meta.data$orig.ident, 
                                theta=2, do_pca=FALSE)
   
-  merged_object@dr$harmony <- corrected
+  merged_object@dr$harmony <- harmony_emb
   
   merged_object
 }
