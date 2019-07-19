@@ -34,7 +34,7 @@ harmony_for_seurat <- function(merged_object){
   pca <- merged_object@dr$pca@cell.embeddings
   
   harmony_emb <- HarmonyMatrix(pca, 
-                               umi.qc.endog$batch, 
+                               merged_object@meta.data$orig.ident, 
                                theta=2, do_pca=FALSE)
   
   merged_object@dr$harmony <- corrected
