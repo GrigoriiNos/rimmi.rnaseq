@@ -4,7 +4,7 @@
 \alias{mnn_for_seurat}
 \title{use the batch effect correction method mnn correct on Seurat objects}
 \usage{
-mnn_for_seurat(merged_object)
+mnn_for_seurat(merged_object, raw.data = T)
 }
 \arguments{
 \item{merged_object}{pre-merged Seurat object}

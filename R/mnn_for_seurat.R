@@ -26,7 +26,7 @@
 #' @export
 #'
 
-mnn_for_seurat <- function(merged_object){
+mnn_for_seurat <- function(merged_object, raw.data = T){
   samples <- unique(merged_object@meta.data$orig.ident)
 
   if (raw.data == F){
