@@ -27,14 +27,22 @@
 #'
 #'
 
-scanorama_seurat <- function(merged_object){
+scanorama_seurat <- function(merged_object, raw.data = T){
   samples <- unique(merged_object@meta.data$orig.ident)
 
-  batch1 <- merged_object@data[, merged_object@meta.data$orig.ident == samples[1]]
-  cells1 <- colnames(batch1)
+  if (raw.data == F){
+    batch1 <- merged_object@data[, merged_object@meta.data$orig.ident == samples[1]]
+    cells1 <- colnames(batch1)
 
-  batch2 <- merged_object@data[, merged_object@meta.data$orig.ident == samples[2]]
-  cells2 <- colnames(batch2)
+    batch2 <- merged_object@data[, merged_object@meta.data$orig.ident == samples[2]]
+    cells2 <- colnames(batch2)
+  } else {
+    batch1 <- merged_object@raw.data[, merged_object@meta.data$orig.ident == samples[1]]
+    cells1 <- colnames(batch1)
+
+    batch2 <- merged_object@raw.data[, merged_object@meta.data$orig.ident == samples[2]]
+    cells2 <- colnames(batch2)
+  }
 
   # List of data sets (matrices of cells-by-genes):
   datasets <- list(t(as.matrix(batch1)),

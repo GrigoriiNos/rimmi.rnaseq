@@ -29,8 +29,13 @@
 mnn_for_seurat <- function(merged_object){
   samples <- unique(merged_object@meta.data$orig.ident)
 
-  batch1 <- merged_object@data[, merged_object@meta.data$orig.ident == samples[1]]
-  batch2 <- merged_object@data[, merged_object@meta.data$orig.ident == samples[2]]
+  if (raw.data == F){
+    batch1 <- merged_object@data[, merged_object@meta.data$orig.ident == samples[1]]
+    batch2 <- merged_object@data[, merged_object@meta.data$orig.ident == samples[2]]
+  } else {
+    batch1 <- merged_object@raw.data[, merged_object@meta.data$orig.ident == samples[1]]
+    batch2 <- merged_object@raw.data[, merged_object@meta.data$orig.ident == samples[2]]
+  }
 
   be_corrected <- scran::mnnCorrect(batch1,
                                     batch2,

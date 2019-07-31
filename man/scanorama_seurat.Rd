@@ -4,7 +4,7 @@
 \alias{scanorama_seurat}
 \title{use the batch effect correction method scanorama on Seurat objects}
 \usage{
-scanorama_seurat(merged_object)
+scanorama_seurat(merged_object, raw.data = T)
 }
 \arguments{
 \item{merged_object}{pre-merged Seurat object}
