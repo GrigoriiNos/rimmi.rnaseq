@@ -74,6 +74,6 @@ scanorama_seurat <- function(merged_object, raw.data = T){
 
   colnames(corrected) <- c(cells1, cells2)
 
-  merged_object@raw.data <- as(corrected, 'dgCMatrix')
+  merged_object@data <- as(corrected, 'dgCMatrix')
   merged_object
 }

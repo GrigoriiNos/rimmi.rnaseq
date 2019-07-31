@@ -54,7 +54,7 @@ mnn_for_seurat <- function(merged_object, raw.data = T){
                      batch22
                      )
 
-  merged_object@raw.data <- corrected
+  merged_object@data <- corrected
 
   merged_object
 }
