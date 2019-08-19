@@ -26,12 +26,31 @@
 #' @export
 #'
 
-harmony_for_seurat <- function(merged_object){
+harmony_for_seurat <- function(merged_object, pc.genes = 'default'){
   library(harmony)
 
-  if (merged_object@dr$pca == NULL){
-    stop("PCA wasn't calculated primarily to running Harmony")
+  merged_object <- FindVariableGenes(object = merged_object,
+                           mean.function = ExpMean,
+                           dispersion.function = LogVMR,
+                           x.low.cutoff = 0.0125,
+                           x.high.cutoff = 3,
+                           y.cutoff = 0.5)
+
+  if (pc.genes == 'default'){
+    pc.gen <-  merged_object@var.genes
   }
+  if (pc.genes == 'no.ig'){
+    pc.gen <- merged_object@var.genes[-(grep(pattern = "^IG[H,L,K][A-Z][0-9].*", x = rownames(x = B03_A07@data)))]
+  }
+  if (pc.genes == 'no.tcr'){
+    pc.gen <- merged_object@var.genes[-(grep(pattern = "^TR[A,B][D,J,V].*", x = rownames(x = B03_A07@data), value = TRUE))]
+  }
+
+  merged_object <- RunPCA(object = merged_object,
+                pc.genes = pc.gen,
+                pcs.compute = 50,
+                do.print = F, pcs.print = 1:5,
+                genes.print = 5)
 
   samples <- unique(merged_object@meta.data$orig.ident)
 
