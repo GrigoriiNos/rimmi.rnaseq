@@ -28,16 +28,20 @@
 
 harmony_for_seurat <- function(merged_object){
   library(harmony)
-  
+
+  if (merged_object@dr$pca == NULL){
+    stop("PCA wasn't calculated primarily to running Harmony")
+  }
+
   samples <- unique(merged_object@meta.data$orig.ident)
-  
+
   pca <- merged_object@dr$pca@cell.embeddings
-  
-  harmony_emb <- HarmonyMatrix(pca, 
-                               merged_object@meta.data$orig.ident, 
+
+  harmony_emb <- HarmonyMatrix(pca,
+                               merged_object@meta.data$orig.ident,
                                theta=2, do_pca=FALSE)
-  
+
   merged_object@dr$harmony <- harmony_emb
-  
+
   merged_object
 }
