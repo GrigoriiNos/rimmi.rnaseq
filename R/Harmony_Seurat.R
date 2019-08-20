@@ -29,7 +29,7 @@
 harmony_for_seurat <- function(merged_object, pc.genes = 'default'){
   library(harmony)
 
-  merged_object <- FindVariableGenes(object = merged_object,
+  merged_object <- Seurat::FindVariableGenes(object = merged_object,
                            mean.function = ExpMean,
                            dispersion.function = LogVMR,
                            x.low.cutoff = 0.0125,

@@ -4,7 +4,7 @@
 \alias{umap_plot3d}
 \title{Plot your clusters in 3 dimensions}
 \usage{
-umap_plot3d(obj, dims = 10)
+umap_plot3d(obj, dims = 1:10)
 }
 \arguments{
 \item{obj}{your Seurat object}
