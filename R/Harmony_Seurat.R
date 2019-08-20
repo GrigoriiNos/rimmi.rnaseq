@@ -40,10 +40,10 @@ harmony_for_seurat <- function(merged_object, pc.genes = 'default'){
     pc.gen <-  merged_object@var.genes
   }
   if (pc.genes == 'no.ig'){
-    pc.gen <- merged_object@var.genes[-(grep(pattern = "^IG[H,L,K][A-Z][0-9].*", x = rownames(x = B03_A07@data)))]
+    pc.gen <- merged_object@var.genes[!grepl(pattern = "^IG[H,L,K][A-Z][0-9].*", x = merged_object@var.genes)]
   }
   if (pc.genes == 'no.tcr'){
-    pc.gen <- merged_object@var.genes[-(grep(pattern = "^TR[A,B][D,J,V].*", x = rownames(x = B03_A07@data), value = TRUE))]
+    pc.gen <- merged_object@var.genes[!grep(pattern = "^TR[A,B][D,J,V].*", x = merged_object@var.genes)]
   }
 
   merged_object <- RunPCA(object = merged_object,
