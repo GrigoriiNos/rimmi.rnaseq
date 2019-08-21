@@ -22,7 +22,9 @@ Imports:
     ggplot2,
     plotly,
     sva,
-    scran
+    scran,
+    ComplexHeatmap,
+    circlize
 License: for internal use in the Soren Brunak's lab
 Encoding: UTF-8
 LazyData: true
