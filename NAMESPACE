@@ -2,6 +2,7 @@
 
 S3method(all,genes.withGO)
 export(Cell.cell.corheatmap)
+export(Gene.gene.corheatmap)
 export(Gene_contribution)
 export(Run_uMAP)
 export(annotate_markers)

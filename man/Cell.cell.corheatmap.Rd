@@ -4,7 +4,8 @@
 \alias{Cell.cell.corheatmap}
 \title{heatmap for cell-cell correlation matrix}
 \usage{
-Cell.cell.corheatmap(Seurat_obj, do.cluster = F, colours = "random")
+Cell.cell.corheatmap(Seurat_obj, do.cluster = F, colours = "random",
+  cor.method = "spearman", title = "Cell-Cell corellation heatmap")
 }
 \arguments{
 \item{Seurat_obj}{Seurat object}
@@ -21,7 +22,7 @@ This function allows you to plot a heatmap for cell-cell correlation
 }
 \examples{
 
-Cell.cell.corheatmap(subSeurat_obj, do.cluster = T)
+Cell.cell.corheatmap(Seurat_obj, do.cluster = T)
 
 }
 \keyword{analysis,}
