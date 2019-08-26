@@ -7,6 +7,7 @@
 #' @param coef.cut.off what monimum correlation coeffitient to choose to cut off the noise
 #' @param gene.cut.off how much genes should have this correlation coefficient
 #' @param imputed should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default
+#' @param gene.names do you want do show gene names? Set to FALSE is you gonna have a large matrix
 #'
 #' @return a heaatmap
 #'
@@ -23,7 +24,8 @@ Gene.gene.corheatmap <- function(Seurat_obj,
                                  cor.method = 'spearman',
                                  coef.cut.off = 0.3,
                                  gene.cut.off = 1,
-                                 imputed = F){
+                                 imputed = F,
+                                 gene.names = T){
 
   print('preprocessing expression matrix')
   if (imputed == F){
@@ -74,6 +76,6 @@ Gene.gene.corheatmap <- function(Seurat_obj,
           col = col_fun,
           cluster_rows = T,
           cluster_columns = T,
-          show_row_names = T,
-          show_column_names = T)
+          show_row_names = gene.names,
+          show_column_names = gene.names)
 }
