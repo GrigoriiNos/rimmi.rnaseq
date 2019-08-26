@@ -5,7 +5,8 @@
 \title{heatmap for cell-cell correlation matrix}
 \usage{
 Cell.cell.corheatmap(Seurat_obj, do.cluster = F, colours = "random",
-  cor.method = "spearman", title = "Cell-Cell corellation heatmap")
+  cor.method = "spearman", imputed = F,
+  title = "Cell-Cell corellation heatmap")
 }
 \arguments{
 \item{Seurat_obj}{Seurat object}
@@ -13,6 +14,10 @@ Cell.cell.corheatmap(Seurat_obj, do.cluster = F, colours = "random",
 \item{do.cluster}{set to T if you want a hierarchical clustering on the top of the heatmap, defulat is FALSE}
 
 \item{colours}{set the colours for clusters that you want, random colours by default}
+
+\item{cor.method}{what method parameter should be passed to cor function, spearman is by default}
+
+\item{@param}{imputed should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default}
 }
 \value{
 a heaatmap

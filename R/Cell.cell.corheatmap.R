@@ -3,10 +3,10 @@
 #' This function allows you to plot a heatmap for cell-cell correlation
 #'
 #' @param Seurat_obj Seurat object
-#'
 #' @param do.cluster set to T if you want a hierarchical clustering on the top of the heatmap, defulat is FALSE
-#'
 #' @param colours set the colours for clusters that you want, random colours by default
+#' @param cor.method what method parameter should be passed to cor function, spearman is by default
+#' @param @param imputed should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default
 #'
 #' @return a heaatmap
 #'
@@ -23,10 +23,16 @@ Cell.cell.corheatmap <- function(Seurat_obj,
                                  do.cluster = F,
                                  colours = 'random',
                                  cor.method = 'spearman',
+                                 imputed = F,
                                  title = "Cell-Cell corellation heatmap"){
 
   print('converting matrix')
-  matr <- as.matrix(Seurat_obj@data)
+  if (imputed == F){
+    matr <- as.matrix(Seurat_obj@data)
+  } else {
+    matr <- Rmagic::magic(t(as.matrix(Seurat_obj@data)))
+    matr <- t(matr)
+  }
 
   print('selecting genes')
   #get rid of ribo, mito and ig genes

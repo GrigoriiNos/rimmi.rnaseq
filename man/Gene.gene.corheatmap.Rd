@@ -5,10 +5,18 @@
 \title{heatmap for gene-gene correlation matrix}
 \usage{
 Gene.gene.corheatmap(Seurat_obj, cor.method = "spearman",
-  cor.cut.off = 0.3)
+  coef.cut.off = 0.3, gene.cut.off = 1, imputed = F)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object}
+
+\item{cor.method}{method to par ro cor function for correlation calculation, spearman is by default}
+
+\item{coef.cut.off}{what monimum correlation coeffitient to choose to cut off the noise}
+
+\item{gene.cut.off}{how much genes should have this correlation coefficient}
+
+\item{imputed}{should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default}
 }
 \value{
 a heaatmap
