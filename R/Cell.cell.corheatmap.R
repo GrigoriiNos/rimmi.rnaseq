@@ -31,7 +31,7 @@ Cell.cell.corheatmap <- function(Seurat_obj,
     matr <- as.matrix(Seurat_obj@data)
   } else {
     matr <- Rmagic::magic(t(as.matrix(Seurat_obj@data)))
-    matr <- t(matr)
+    matr <- t(matr[[1]])
   }
 
   print('selecting genes')
@@ -103,18 +103,3 @@ Cell.cell.corheatmap <- function(Seurat_obj,
           top_annotation = HeatmapAnnotation(group = gd, col = list(group = group_color), show_legend = FALSE)) +
     rowAnnotation(group = gd, col = list(group = group_color), width = unit(0.5, "cm"))
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
