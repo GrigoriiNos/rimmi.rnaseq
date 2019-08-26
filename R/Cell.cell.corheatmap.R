@@ -5,7 +5,7 @@
 #' @param Seurat_obj Seurat object
 #' @param do.cluster set to T if you want a hierarchical clustering on the top of the heatmap, defulat is FALSE
 #' @param colours set the colours for clusters that you want, random colours by default
-#' @param cor.method what method parameter should be passed to cor function, spearman is by default
+#' @param cor.method what method parameter should be passed to cor function, spearman is by default, bayesian (package psycho), pearson and kendall can also be used
 #' @param @param imputed should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default
 #'
 #' @return a heaatmap
@@ -46,7 +46,13 @@ Cell.cell.corheatmap <- function(Seurat_obj,
 
   print('calculating correlation matrix')
   # get a correlation matrix
-  cor.mat <- cor(matr, method = cor.method)
+  if (cor.method == 'bayesian'){
+    cor.mat <- psycho::bayes_cor(matr)
+  } else {
+    cor.mat <- cor(matr,
+                   method = cor.method)
+  }
+
 
   # clean in case of na values
   cor.mat[is.na(cor.mat)] <- 0

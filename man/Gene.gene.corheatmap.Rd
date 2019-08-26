@@ -11,7 +11,7 @@ Gene.gene.corheatmap(Seurat_obj, cor.method = "spearman",
 \arguments{
 \item{Seurat_obj}{Seurat object}
 
-\item{cor.method}{method to par ro cor function for correlation calculation, spearman is by default}
+\item{cor.method}{method to par ro cor function for correlation calculation, spearman is by default, bayesian (package psycho), pearson and kendall can also be used}
 
 \item{coef.cut.off}{what monimum correlation coeffitient to choose to cut off the noise}
 

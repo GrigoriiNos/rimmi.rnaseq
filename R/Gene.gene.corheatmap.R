@@ -3,7 +3,7 @@
 #' This function allows you to plot a heatmap for gene-gene correlation
 #'
 #' @param Seurat_obj Seurat object
-#' @param cor.method method to par ro cor function for correlation calculation, spearman is by default
+#' @param cor.method method to par ro cor function for correlation calculation, spearman is by default, bayesian (package psycho), pearson and kendall can also be used
 #' @param coef.cut.off what monimum correlation coeffitient to choose to cut off the noise
 #' @param gene.cut.off how much genes should have this correlation coefficient
 #' @param imputed should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default
@@ -44,7 +44,12 @@ Gene.gene.corheatmap <- function(Seurat_obj,
   matr <- matr[rownames(matr) %in% features,]
 
   # get a correlation matrix
-  cor.mat <- cor(t(matr), method = cor.method)
+  if (cor.method == 'bayesian'){
+    cor.mat <- psycho::bayes_cor(t(matr))
+  } else {
+    cor.mat <- cor(t(matr),
+                   method = cor.method)
+  }
 
   print('calculating cor matrix')
   # clean in case of na values

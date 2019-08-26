@@ -15,7 +15,7 @@ Cell.cell.corheatmap(Seurat_obj, do.cluster = F, colours = "random",
 
 \item{colours}{set the colours for clusters that you want, random colours by default}
 
-\item{cor.method}{what method parameter should be passed to cor function, spearman is by default}
+\item{cor.method}{what method parameter should be passed to cor function, spearman is by default, bayesian (package psycho), pearson and kendall can also be used}
 
 \item{@param}{imputed should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default}
 }
