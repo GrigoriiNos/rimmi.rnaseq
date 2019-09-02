@@ -25,6 +25,7 @@ Gene.gene.corheatmap <- function(Seurat_obj,
                                  cor.method = 'spearman',
                                  coef.cut.off = 0.3,
                                  gene.cut.off = 1,
+                                 use.hvg = F,
                                  imputed = F,
                                  impute_after = T,
                                  gene.names = T){
@@ -45,15 +46,18 @@ Gene.gene.corheatmap <- function(Seurat_obj,
   #get rid of ribo, mito and ig genes
   features_select <- grep("^MT[-,{RNR}]|^IG[H,L,K][A-Z][0-9].*|^RP[L,S][0-9].*|^RP[0-9].*|^FO[0-9]{2,}|^AP[0-9]{2,}|\\.", rownames(Seurat_obj@data), value = T)
 
-  var.genes <- Seurat_obj@hvg.info %>%
-    tibble::rownames_to_column() %>%
-    mutate(genes = toupper(rowname)) %>%
-    top_n(n = 2000, wt = gene.dispersion) %>%
-    pull(genes)
+  if (use.hvg == T){
+    var.genes <- Seurat_obj@hvg.info %>%
+      tibble::rownames_to_column() %>%
+      mutate(genes = toupper(rowname)) %>%
+      top_n(n = 1500, wt = gene.dispersion) %>%
+      pull(genes)
 
   # take only higly variable genes into account
-  features <- var.genes[!(var.genes %in% features_select)]
-
+    features <- var.genes[!(var.genes %in% features_select)]
+  } else {
+    features <- Seurat_obj@var.genes[!(Seurat_obj@var.genes %in% features_select)]
+  }
   # get a matrix with only variable and functional genes
   matr <- matr[rownames(matr) %in% features,]
 

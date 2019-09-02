@@ -5,7 +5,7 @@
 \title{heatmap for gene-gene correlation matrix}
 \usage{
 Gene.gene.corheatmap(Seurat_obj, cor.method = "spearman",
-  coef.cut.off = 0.3, gene.cut.off = 1, imputed = F,
+  coef.cut.off = 0.3, gene.cut.off = 1, use.hvg = F, imputed = F,
   impute_after = T, gene.names = T)
 }
 \arguments{
