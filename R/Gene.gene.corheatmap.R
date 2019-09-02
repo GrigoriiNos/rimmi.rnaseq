@@ -8,6 +8,7 @@
 #' @param gene.cut.off how much genes should have this correlation coefficient
 #' @param imputed should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default
 #' @param gene.names do you want do show gene names? Set to FALSE is you gonna have a large matrix
+#' @param impute_after do you want to impute cor matrix that was generated after analysing unimputed data?
 #'
 #' @return a heaatmap
 #'
@@ -25,20 +26,33 @@ Gene.gene.corheatmap <- function(Seurat_obj,
                                  coef.cut.off = 0.3,
                                  gene.cut.off = 1,
                                  imputed = F,
+                                 impute_after = T,
                                  gene.names = T){
 
   print('preprocessing expression matrix')
   if (imputed == F){
     matr <- as.matrix(Seurat_obj@data)
   } else {
-    matr <- Rmagic::magic(t(as.matrix(Seurat_obj@data)))
+    matr <- Rmagic::magic(
+      t(as.matrix(Seurat_obj@data))
+      )
     matr <- t(matr[[1]])
   }
+
+  #Seurat_obj@var.genes <- toupper(Seurat_obj@var.genes)
+  rownames(Seurat_obj@data) <- toupper(rownames(Seurat_obj@data))
+
   #get rid of ribo, mito and ig genes
   features_select <- grep("^MT[-,{RNR}]|^IG[H,L,K][A-Z][0-9].*|^RP[L,S][0-9].*|^RP[0-9].*|^FO[0-9]{2,}|^AP[0-9]{2,}|\\.", rownames(Seurat_obj@data), value = T)
 
+  var.genes <- Seurat_obj@hvg.info %>%
+    tibble::rownames_to_column() %>%
+    mutate(genes = toupper(rowname)) %>%
+    top_n(n = 2000, wt = gene.dispersion) %>%
+    pull(genes)
+
   # take only higly variable genes into account
-  features <- Seurat_obj@var.genes[!(Seurat_obj@var.genes %in% features_select)]
+  features <- var.genes[!(var.genes %in% features_select)]
 
   # get a matrix with only variable and functional genes
   matr <- matr[rownames(matr) %in% features,]
@@ -68,6 +82,13 @@ Gene.gene.corheatmap <- function(Seurat_obj,
 
   sub_matr <- matr[rownames(matr) %in% rownames(cor.mat)[high.corr], ]
   nrow(sub_matr)
+
+  if (impute_after == T){
+    sub_matr <- Rmagic::magic(
+      t(as.matrix(sub_matr))
+    )
+    sub_matr <- t(sub_matr[[1]])
+  }
 
   sub_corr.mat <- cor(t(sub_matr), method = cor.method)
 

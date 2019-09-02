@@ -6,7 +6,7 @@
 \usage{
 Gene.gene.corheatmap(Seurat_obj, cor.method = "spearman",
   coef.cut.off = 0.3, gene.cut.off = 1, imputed = F,
-  gene.names = T)
+  impute_after = T, gene.names = T)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object}
@@ -18,6 +18,8 @@ Gene.gene.corheatmap(Seurat_obj, cor.method = "spearman",
 \item{gene.cut.off}{how much genes should have this correlation coefficient}
 
 \item{imputed}{should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default}
+
+\item{impute_after}{do you want to impute cor matrix that was generated after analysing unimputed data?}
 
 \item{gene.names}{do you want do show gene names? Set to FALSE is you gonna have a large matrix}
 }
