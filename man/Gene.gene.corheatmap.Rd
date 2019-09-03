@@ -17,7 +17,7 @@ Gene.gene.corheatmap(Seurat_obj, cor.method = "spearman",
 
 \item{gene.cut.off}{how much genes should have this correlation coefficient}
 
-\item{imputed}{should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default}
+\item{imputed}{should MAGIC imputation be used on an expression matrix primarily to correlation analysis, FALSE by default}
 
 \item{impute_after}{do you want to impute cor matrix that was generated after analysing unimputed data?}
 

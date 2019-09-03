@@ -6,7 +6,7 @@
 #' @param cor.method method to par ro cor function for correlation calculation, spearman is by default, bayesian (package psycho), pearson and kendall can also be used
 #' @param coef.cut.off what monimum correlation coeffitient to choose to cut off the noise
 #' @param gene.cut.off how much genes should have this correlation coefficient
-#' @param imputed should MAGIC imputetion be used on an expression matrix primarily to correlation analysis, FALSE by default
+#' @param imputed should MAGIC imputation be used on an expression matrix primarily to correlation analysis, FALSE by default
 #' @param gene.names do you want do show gene names? Set to FALSE is you gonna have a large matrix
 #' @param impute_after do you want to impute cor matrix that was generated after analysing unimputed data?
 #'
@@ -42,6 +42,7 @@ Gene.gene.corheatmap <- function(Seurat_obj,
 
   #Seurat_obj@var.genes <- toupper(Seurat_obj@var.genes)
   rownames(Seurat_obj@data) <- toupper(rownames(Seurat_obj@data))
+  Seurat_obj@var.genes <- toupper(Seurat_obj@var.genes)
 
   #get rid of ribo, mito and ig genes
   features_select <- grep("^MT[-,{RNR}]|^IG[H,L,K][A-Z][0-9].*|^RP[L,S][0-9].*|^RP[0-9].*|^FO[0-9]{2,}|^AP[0-9]{2,}|\\.", rownames(Seurat_obj@data), value = T)
