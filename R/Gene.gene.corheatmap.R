@@ -45,8 +45,9 @@ Gene.gene.corheatmap <- function(Seurat_obj,
   Seurat_obj@var.genes <- toupper(Seurat_obj@var.genes)
 
   #get rid of ribo, mito and ig genes
-  features_select <- grep("^MT[-,{RNR}]|^IG[H,L,K][A-Z][0-9].*|^RP[L,S][0-9].*|^RP[0-9].*|^FO[0-9]{2,}|^AP[0-9]{2,}|\\.", rownames(Seurat_obj@data), value = T)
+  features_select <- grep("^MT[-,{RNR}]|^IG[H,L,K][A-Z][0-9].*|^RP[L,S][0-9].*|^RP[0-9].*|^FO[0-9]{2,}|^AP[0-9]{2,}|\\.|[0-9].*RIK", rownames(Seurat_obj@data), value = T)
 
+  library(dplyr)
   if (use.hvg == T){
     var.genes <- Seurat_obj@hvg.info %>%
       tibble::rownames_to_column() %>%
