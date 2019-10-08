@@ -1,6 +1,8 @@
 #' Run Velocyto analysis on your Seurat2 object
 #'
-#' This function allows you to un Velocyto analysis on your Seurat2 object and visualise it on your umap embeddings
+#' This function allows you to un Velocyto analysis on your Seurat2 object and visualise it on your umap embeddings,
+#' you need to have fully pre-proccessed Seurat object with QC done, 2d embeddings and clustering pre-calculated,
+#'
 #'
 #' @param Seurat_obj  Seurat object
 #' @param loom_path path to the loom file, pre-calculated with python command line tool
@@ -16,7 +18,7 @@
 #' @export
 
 
-Seurat2_velocyto <- function(loom_path, Seurat_obj){
+Seurat2_velocyto <- function(loom_path, Seurat_obj, emb = 'monocle'){
   library(velocyto.R)
  # This is generated from the Velocyto python command line tool.
  # You need a loom file before you can proceed
@@ -36,7 +38,26 @@ Seurat2_velocyto <- function(loom_path, Seurat_obj){
    stop('clustering was not precalculated for this Seurat object')
  }
 
- emb <- Seurat_obj@dr$umap@cell.embeddings
+ if (emb == 'umap'){
+  emb <- Seurat_obj@dr$umap@cell.embeddings
+
+  gg <- DimPlot(Seurat_obj,
+                reduction.use = "umap",
+                do.label = T)
+ }
+ if (emb == 'monocle'){
+   emb <- as.data.frame(Seurat_obj@dr$monocle)
+   emb <- emb[rownames(Seurat_obj@meta.data),]
+   colnames(emb) <- c('Umap1', 'Umap2')
+   emb$cluster <- Seurat_obj@meta.data$res.0.6
+   Seurat_obj@dr$monocle <- NULL
+
+   gg <- ggplot(data = emb,
+                aes(x = Umap1, y = Umap2, colour = cluster))+
+     geom_point()
+   emb$cluster <- NULL
+   emb <- as.matrix(emb)
+ }
 
  # Estimate the cell-cell distances
  cell.dist <- as.dist(1-armaCor(t(emb)))
@@ -69,15 +90,12 @@ Seurat2_velocyto <- function(loom_path, Seurat_obj){
                                              n.cores=24)
 
  # This section gets the colors out of the seurat tSNE object so that my seurat and velocyto plots use the same color scheme.
- gg <- DimPlot(Seurat_obj,
-               reduction.use = "umap",
-               do.label = T)
-
  ggplot_build(gg)$data
  colors <- as.list(ggplot_build(gg)$data[[1]]$colour)
  names(colors) <- rownames(emb)
 
-
+ {
+ png('My_velocity.png')
  p1 <- show.velocity.on.embedding.cor(emb,
                                       rvel.cd,
                                       n=30,
@@ -93,7 +111,8 @@ Seurat2_velocyto <- function(loom_path, Seurat_obj){
                                       cell.border.alpha = 0.1,
                                       n.cores=24,
                                       main="Cell Velocity")
+  dev.off()
+  }
+
 }
-
-
 

@@ -4,7 +4,7 @@
 \alias{Seurat2_velocyto}
 \title{Run Velocyto analysis on your Seurat2 object}
 \usage{
-Seurat2_velocyto(loom_path, Seurat_obj)
+Seurat2_velocyto(loom_path, Seurat_obj, emb = "monocle")
 }
 \arguments{
 \item{loom_path}{path to the loom file, pre-calculated with python command line tool}
@@ -15,7 +15,8 @@ Seurat2_velocyto(loom_path, Seurat_obj)
 umap 2d plot with velocity
 }
 \description{
-This function allows you to un Velocyto analysis on your Seurat2 object and visualise it on your umap embeddings
+This function allows you to un Velocyto analysis on your Seurat2 object and visualise it on your umap embeddings,
+you need to have fully pre-proccessed Seurat object with QC done, 2d embeddings and clustering pre-calculated,
 }
 \examples{
 
