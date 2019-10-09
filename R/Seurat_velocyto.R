@@ -46,7 +46,7 @@ Seurat2_velocyto <- function(loom_path, Seurat_obj, emb = 'monocle'){
                 do.label = T)
  }
  if (emb == 'monocle'){
-   emb <- as.data.frame(Seurat_obj@dr$monocle)
+   emb <- as.data.frame(Seurat_obj@misc$monocle)
    emb <- emb[rownames(Seurat_obj@meta.data),]
    colnames(emb) <- c('Umap1', 'Umap2')
    emb$cluster <- Seurat_obj@meta.data$res.0.6
