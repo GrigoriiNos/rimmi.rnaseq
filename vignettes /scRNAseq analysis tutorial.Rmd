@@ -1,0 +1,206 @@
+---
+title: "Basic analysis of your scRNA-seq data"
+author: "Grigorii Nos"
+date: "10/15/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Pre-install necessary software
+
+all of these packages depend on a bunch of another one, I cannot promise that you have all of them here in this list, so just feel free to shoot me email if you have errors 
+
+```{r install and load packages}
+if (!require("dplyr")) install.packages('dplyr')
+if (!require("devtools")) install.packages('devtools')
+if (!require('gProfileR')) install.packages('gProfileR')
+if (!require('WriteXLS')) install.packages('WriteXLS')
+
+if (!require("rimmi.rnaseq")) devtools::install_github(repo = 'GrigoriiNos/rimmi.rnaseq') # install my package
+if (!require("Seurat")) devtools::install_version(package = 'Seurat', version = package_version('2.3.4')) # if this didn't work try this - source("https://z.umn.edu/archived-seurat")
+
+library(Seurat)
+library(rimmi.rnaseq)
+library(gProfileR)
+library(WriteXLS)
+```
+
+## loading the data
+
+first of all you need to upload your R object, either click on it on your file system manager or run this command, specifying the path to the object that you want to analysie
+
+```{r load the data}
+load('~/Desktop/RIMMI/Cre+:Cre- murine MLN+PP/E12/E12.RData')
+
+E12
+```
+
+Right after you've run that you gonna see the name of your sample in the global enviornment (top-left side) as Large seurt object
+Seurat object is storage of multiple cell-gene tables (raw, normalised ans scaled), different metadata about cells and genes and the output of the downstream analysis steps
+
+## Take a first look at the data
+
+When bioinformatition passes you the object, he already did QC, normalisation + scaling, dimensionality reduction and clustering, so you can call classis 2d scatter plot of your cells,
+to visualise clusters, you can have multiple clusterings with various resolutions stored in @meta.data slot.
+
+If you tell R to show you meta data for each cell (rows = cell barcodes, columes - different features for the cells), you will see that there are one or several variables called res.0.6, or res.0.4, this is the output of the clustering in different resolutions, higher resolution is, more sensitive the clustering.
+
+```{r pressure}
+head(E12@meta.data)
+```
+
+## Plotting cells
+
+Now lets make this plot
+
+```{r plot clusters}
+
+# function for clustering visualisation
+DimPlot(E12, # the name of the sample
+        reduction.use = "umap", # what type of 2d dimensionality reduction we gonna use
+        do.label = T, # tell the program that it needs to show cluster numbers on the plot
+        group.by = 'res.0.4' # what resolution do you want for cell colouring? Change this parameter 
+)
+```
+
+
+## How to calculate new resolution
+
+Let's say you think that the current clustering that I pre-calculated is not detalied enough or vise versa, so you can calculate some more yourself, run this command. 
+For instance you want to calculate clustering with resolution = 1
+
+```{r New clustering resolution}
+dims <- E12@calc.params$RunUMAP$dims.use # please DON'T change this parameter, this is the minimum number or PCA dimensions that have maximum information preserved
+
+# function for clustering calculation
+E12 <- FindClusters(object = E12, # the sample name
+                    reduction.type = "pca", 
+                    dims.use = dims, 
+                    resolution = 1, ###<<<<<### CHANGE THIS PARAMETER FOR RESOLUTION
+                    print.output = 0, 
+                    save.SNN = TRUE, 
+                    force.recalc = T)
+
+# function for clustering visualisation
+DimPlot(E12, 
+        reduction.use = "umap", 
+        do.label = T, 
+        group.by = 'res.1' ### SPECIFY that now you want to change resolution on your plot
+)
+
+```
+
+## Feature plots
+
+When you want to plot an individual gene on your UMAP 2d plot, fun feature plot function
+
+```{r feature plots}
+
+# T-zone reticular cells?
+FeaturePlot(object = E12, # sample name
+            features.plot = c("CCL21A", "IL7", 'CCL19'),  # gene names, don't forget to add quotes and commas in the approptiate way, or you will have syntax errors
+            cols.use = c("grey", "blue"), # colouts
+            reduction.use = "umap")
+
+```
+
+## Do violin plots the same way
+
+```{r violin}
+# T-zone reticular cells?
+VlnPlot(object = E12, 
+        features.plot = c("CCL21A", "IL7", 'CCL19'))
+
+```
+
+
+## Plot gene signatures
+
+```{r signatures}
+
+# add new feature in the table as a average expression or several genes
+E12 <- put_signature(markers = c("CCL19", "IL7", 'CXCL9', 'CCL21A', 'CXCL1'), # change genes names here
+                     Seurat_obj = E12, 
+                     title =  'TRC signature'
+)
+
+# then plot it in the same way
+FeaturePlot(object = E12, 
+            features.plot = 'TRC signature', 
+            cols.use = c("grey", "red"), 
+            reduction.use = "umap", 
+            min.cutoff = 'q10', # we set this parameter so only really high genes are marked with colour, because the average expression of multiple genes cannot be very low 
+            max.cutoff = 'q90')
+
+
+```
+
+## Re-calculate cluster markers
+
+Now you can calculate markers for your new clusters and save them in the excel spreadsheet
+As a cluster marker we difuine genes that are differentially expressed between a given cluster and the rest of the cells in the sample.
+
+You can see that the parameter only.pos is set as TRUE, meaning that you cauculate only positive markers.
+```{r cluster markers}
+# calculate markers, this step can take some time, go and grab a cup of coffee
+E12_markers <- FindAllMarkers(object = E12, 
+                              only.pos = TRUE, # <<<<<<< set as FALSE if you need negative markers
+                              min.pct = 0.25, 
+                              thresh.use = 0.25)
+
+# show the table in R with top 10 differentially expressed genes for each cluster
+View(
+  E12_markers %>% 
+    group_by(cluster) %>% 
+    top_n(10, avg_logFC)
+)
+
+# save the table in excel file, specify the path to your folder
+rimmi.rnaseq::markers_to_xls(E12_markers, '~/Desktop/RIMMI/Cre+:Cre- murine MLN+PP/E12/blablabla')
+```
+
+## Functional analysis 
+
+Now you may want to do enrichment analysis for dufferent functions or pathways for your cluster markers, gene sets with pathway/function term are taken from 
+all possible databases, such as GO, KEGG, reactome etc.
+
+Make sure you are connected to the internet, otherwise this program won't work
+
+```{r functional analysis}
+
+annotation <- annotate_markers(markers_table = E12_markers, 
+                               organism = "mmusculus")
+
+
+# shot top 10 for each clsuter
+View(
+  annotation %>% 
+    group_by(cluster) %>% 
+    top_n(10, p.value)
+)
+
+# save is as an excel shreadsheet
+WriteXLS::WriteXLS(x = annotation,
+                   ExcelFileName = "~/Desktop/RIMMI/Cre+:Cre- murine MLN+PP/E12/blablabla", # <<<<<<< specify file name
+                   row.names = T
+)
+```
+
+## Gene plots
+
+You may want to check the relationships between 2 genes, for that you can use GenePlot function
+
+```{r geneplot}
+
+GenePlot(object = E12, 
+         gene1 = "CCL19", 
+         gene2 = "CCL21A")
+
+```
+
+This is it so far. I will be adding new features if we come up with something, don't forget that you can request some new functions if you have some idea of the analysis for your data!
+
+Good luck!
