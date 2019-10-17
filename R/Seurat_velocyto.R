@@ -83,20 +83,6 @@ preprocess_loom <- function(loom_path, Seurat_obj, emb){
   # intronic read (unspliced) expression matrix
   nmat <- ldat$unspliced
 
-  clean_spmat <- function(mat){
-    print('trimming cellular barcodes')
-    colnames(mat) <- gsub('possorted_genome_bam_[A-Z].*:|x|[A-Z][0-9]{2}:', '', colnames((mat)))
-
-    print(paste0('filtering ', sum(duplicated(rownames(mat))), ' dublicated genes'))
-    mat <- mat[!duplicated(rownames(mat)),]
-
-    # subset dead and bad quality cells
-    mat <- mat[,colnames(mat) %in% colnames(Seurat_obj@data)]
-
-    mat <- mat[,names(Seurat_obj@ident)]
-    mat
-}
-
   emat <- clean_spmat(emat)
   nmat <- clean_spmat(nmat)
 
