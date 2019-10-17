@@ -147,8 +147,10 @@ Seurat2_velocyto <- function(rvel.cd, Seurat_obj, emb){
  colors <- as.list(ggplot_build(gg)$data[[1]]$colour)
  names(colors) <- rownames(emb)
 
+ rm(Seurat_obj)
+
  {
- png('My_velocity.png')
+ jpeg('My_velocity.jpg', width = 1500, height = 1200, res = 300)
  p1 <- show.velocity.on.embedding.cor(emb,
                                       rvel.cd,
                                       n=30,
