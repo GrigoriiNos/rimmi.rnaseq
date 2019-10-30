@@ -4,7 +4,7 @@
 \alias{merge_loom}
 \title{Merge two loom files into one and produce rvel.cd}
 \usage{
-merge_loom(loom1, loom2, sample1, sample2, emb)
+merge_loom(loom1, loom2, Seurat_obj, sample1, sample2, emb)
 }
 \arguments{
 \item{loom1}{path to loom file 1}

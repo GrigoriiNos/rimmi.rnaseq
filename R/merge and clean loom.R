@@ -19,7 +19,12 @@
 #'
 #' @export
 
-merge_loom <- function(loom1, loom2, sample1, sample2, emb){
+merge_loom <- function(loom1,
+                       loom2,
+                       Seurat_obj,
+                       sample1,
+                       sample2,
+                       emb){
   library(velocyto.R)
   library(Matrix.utils)
 
@@ -50,8 +55,8 @@ merge_loom <- function(loom1, loom2, sample1, sample2, emb){
   }
   rm(ldat1, ldat2, emat1, emat2, nmat1, nmat2)
 
-  emat <- clean_spmat(emat, pp.comp)
-  nmat <- clean_spmat(nmat, pp.comp)
+  emat <- clean_spmat(emat, Seurat_obj)
+  nmat <- clean_spmat(nmat, Seurat_obj)
 
   cell.dist <- as.dist(1-armaCor(t(emb)))
   fit.quantile <- 0.02
