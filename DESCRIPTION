@@ -27,7 +27,6 @@ Imports:
     ComplexHeatmap,
     circlize,
     velocyto.R,
-    reticulate,
     Matrix.utils
 License: for internal use in Soren Brunak's lab
 Encoding: UTF-8
