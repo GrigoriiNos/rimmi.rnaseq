@@ -83,8 +83,8 @@ preprocess_loom <- function(loom_path, Seurat_obj, emb){
   # intronic read (unspliced) expression matrix
   nmat <- ldat$unspliced
 
-  emat <- clean_spmat(emat)
-  nmat <- clean_spmat(nmat)
+  emat <- clean_spmat(emat, Seurat_obj)
+  nmat <- clean_spmat(nmat, Seurat_obj)
 
   # I'm not sure what this parameter does to be honest. 0.02 default
   # perform gamma fit on a top/bottom quantiles of expression magnitudes
