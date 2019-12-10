@@ -87,5 +87,34 @@ pull_isotype <- function(Seurat_obj,
 }
 
 
+#' This function allows you to pull specific barcodes from the object with specific clonotypes from specific clusters
+#'
+#' @param Seurat_obj Seurat object with integrated data from VDJ analysis with Isotype assigment 
+#' @param clonotypes clonotype names
+#' @param clusters cluster names
+#'
+#' @keywords VDJ analysis, B cells, T cells
+#'
+#' @examples
+#'
+#' pull_clonotype(A07, 'IGHA1')
+#'
+#' @export
+#'
 
+pull_clonotype <- function(Seurat_obj, 
+                           clonotypes, 
+                           clusters = NULL){
+  
+  Seurat_obj@meta.data <- Seurat_obj@meta.data[names(Seurat_obj@ident),]
+  
+  if (is.null(clusters)){
+    clono.cells <- rownames(
+      Seurat_obj@meta.data)[Seurat_obj@meta.data$clonotype_id %in% clonotypes]
+  } else{
+    clono.cells <- rownames(
+      Seurat_obj@meta.data)[(Seurat_obj@meta.data$clonotype_id %in% clonotypes) & (Seurat_obj@ident %in% clusters)]
+  }
+  clono.cells
+}
 

@@ -27,17 +27,17 @@ add_vdj <- function(vdj_location, Seurat_obj){
 
   # Only keep the barcode, isotype and clonotype columns.
   # We'll get additional clonotype info from the clonotype table.
-  vdj <- vdj[,c("barcode", "raw_clonotype_id", "c_gene")]
+  vdj <- vdj[,c("barcode", "raw_clonotype_id", "c_gene", "v_gene", "d_gene", "j_gene")]
   names(vdj)[names(vdj) == "raw_clonotype_id"] <- "clonotype_id"
 
   # Clonotype/isotype-centric info
   clono <- read.csv(paste(vdj_location,"clonotypes.csv", sep=""))
 
   # Slap the AA sequences onto our original table by clonotype_id.
-  vdj <- merge(vdj, clono[, c("clonotype_id", "cdr3s_aa")])
+  vdj <- merge(vdj, clono[, c("clonotype_id", "cdr3s_aa", "cdr3s_nt")])
 
   # Reorder so barcodes are first column and set them as rownames.
-  vdj <- vdj[, c('barcode', 'clonotype_id', 'c_gene', 'cdr3s_aa')]
+  vdj <- vdj[, c("barcode", "clonotype_id", "c_gene", "v_gene", "d_gene", "j_gene", "cdr3s_aa", "cdr3s_nt")]
   rownames(vdj) <- vdj[,'barcode']
   vdj[,'bacrode'] <- NULL
 
