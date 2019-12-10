@@ -7,7 +7,7 @@
 add_vdj(vdj_location, Seurat_obj)
 }
 \arguments{
-\item{vdj_location}{}
+\item{vdj_location}{location of cel ranger vdj output}
 
 \item{Seurat_obj}{Seurat object}
 }
@@ -20,6 +20,7 @@ This function allows you to fuse the output of VDJ library to Seurat object
 \examples{
 
 A07 <- add_vdj('path_to_vdj', A07)
+
 
 }
 \keyword{RNA}

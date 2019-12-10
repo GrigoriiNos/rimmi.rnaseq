@@ -18,9 +18,7 @@
 markers_to_xls <- function(markers_table, filename = 'my_markers'){
   library(dplyr)
   ###
-  clusters <- 0:(length(
-    unique(markers_table$cluster))-1
-  )
+  clusters <- unique(markers_table$cluster)
   tables <- list()
   for (i in 1:length(clusters)){
     sub_markers_table <- markers_table %>%
