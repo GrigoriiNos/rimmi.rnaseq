@@ -39,7 +39,7 @@ add_vdj <- function(vdj_location, Seurat_obj){
   # Reorder so barcodes are first column and set them as rownames.
   vdj <- vdj[, c("barcode", "clonotype_id", "c_gene", "v_gene", "d_gene", "j_gene", "cdr3s_aa", "cdr3s_nt")]
   rownames(vdj) <- vdj[,'barcode']
-  vdj[,'bacrode'] <- NULL
+  vdj$barcode <- NULL
 
   # Add to the Seurat object's metadata.
   clono_seurat <- AddMetaData(object=Seurat_obj, metadata=vdj)
