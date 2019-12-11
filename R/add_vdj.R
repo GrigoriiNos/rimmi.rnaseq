@@ -45,3 +45,45 @@ add_vdj <- function(vdj_location, Seurat_obj){
   clono_seurat <- AddMetaData(object=Seurat_obj, metadata=vdj)
   return(clono_seurat)
 }
+
+#' This function allows you pull a summary information about your clonotypes
+#'
+#' @param Seurat_obj Seurat object with integrated data from VDJ analysis with Isotype assigment
+#'
+#' @keywords DEG, single cell, VDJ analysis, B cells, T cells
+#'
+#' @examples
+#'
+#' clonotypes_summary(A07, n = 10)
+#'
+#' @export
+#'
+
+clonotypes_summary <- function(Seurat_obj, n = 10){
+
+  # take top n clonotypes
+  clonotypes <- table(Seurat_obj@meta.data$clonotype_id)
+
+  top10clones <- clonotypes[
+    order(clonotypes, decreasing = T)
+    ][1:n]
+
+  top10clones <- names(
+    top10clones
+  )
+
+  # pull unique info about clonotypes from meta data
+  summary <- Seurat_obj@meta.data %>%
+    filter(clonotype_id %in% top10clones) %>%
+    select(c(clonotype_id, c_gene, v_gene, d_gene, j_gene, cdr3s_aa, cdr3s_nt)) %>%
+    distinct() %>%
+    arrange(as.numeric(gsub('[a-z]','', clonotype_id)))
+
+  write.csv(summary,
+            file = 'clonotypes_summary',
+            quote = F,
+            row.names = F)
+  print('clonotypes summary table is written')
+
+  print(summary)
+}
