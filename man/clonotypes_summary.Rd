@@ -8,6 +8,8 @@ clonotypes_summary(Seurat_obj, n = 10)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object with integrated data from VDJ analysis with Isotype assigment}
+
+\item{n}{how much clones}
 }
 \description{
 This function allows you pull a summary information about your clonotypes

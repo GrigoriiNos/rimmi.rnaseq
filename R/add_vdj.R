@@ -49,6 +49,7 @@ add_vdj <- function(vdj_location, Seurat_obj){
 #' This function allows you pull a summary information about your clonotypes
 #'
 #' @param Seurat_obj Seurat object with integrated data from VDJ analysis with Isotype assigment
+#' @param n how much clones
 #'
 #' @keywords DEG, single cell, VDJ analysis, B cells, T cells
 #'
