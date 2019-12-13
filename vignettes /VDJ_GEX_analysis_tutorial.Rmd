@@ -1,0 +1,164 @@
+---
+title: "VDJ + GEX data integration"
+author: "Grigorii Nos"
+date: "12/11/2019"
+output: html_document
+---
+
+# Take a look at your Seurat object data with VDJ output incorporated
+
+```{r explore the data}
+# load basic libraries and my super-druper rimmi.rnaseq package 
+
+library(Seurat)
+library(dplyr)
+library(rimmi.rnaseq)
+
+#load the object
+load('~/Desktop/RIMMI/Adam_germinal_cenrte/A07/A07_CLEANED_with_cc.RData')
+A07@meta.data
+```
+
+## Take a look at the clonotypes 
+
+```{r clonotypes}
+# sort clonotypes in decreasing order
+clonotypes <- table(
+  A07@meta.data$clonotype_id
+  )
+
+clonotypes[
+  order(clonotypes, decreasing = T)
+  ][1:10]
+```
+
+## Take n predominant clonotypes and show their IG genes profile and CDR 3 sequence
+
+```{r clonotypes2}
+# change n if needed
+clonotypes_summary(A07, n = 10)
+```
+
+## Take a look at your the isotypes
+
+```{r isotypes}
+# sort isotypes in decreasing order 
+isotypes <- table(
+  A07@meta.data$c_gene
+  )
+
+isotypes[
+  order(isotypes, decreasing = T)
+  ][1:10]
+```
+
+# Plot your clonotypes and isotypes on GEX based UMAP
+
+## plot the isotypes on the umap
+
+```{r plot short isotypes}
+# make an additional variable with short isotype name
+A07@meta.data$c_gene_short <- gsub('[0-9]', '', A07@meta.data$c_gene)
+
+# plot short isotypes
+DimPlot(A07, 
+        reduction.use = 'umap', 
+        group.by = 'c_gene_short')
+```
+
+```{r plot full isotypes}
+# plot full isotype on your umap
+DimPlot(A07, 
+        reduction.use = 'umap', 
+        group.by = 'c_gene')
+```
+
+## pull specific isotypes or clones for the whole sample or within certain clusters
+
+```{r pull and plot specific isotypes}
+# single isotype, uncpesicied argument 'clusters' means to pull all cells of this isotype
+IGHA1.cells <- pull_isotype(Seurat_obj = A07, 
+                            isotypes =  'IGHA1'
+                            )
+
+FeaturePlot(object = A07, 
+            reduction.use = 'umap',
+            features.plot = c('IGHA1' ,'IGHA2'), # change gene names
+            cells.use = IGHA1.cells, # change here cells subset of interest, that you've pulled one step above
+            cols.use = c('grey', 'blue'),
+            pt.size = 2
+            )
+```
+
+
+```{r pull and plot specific isotypes2}
+# more complex quiery, two isotypes and specific clusters
+IGHA.cells <- pull_isotype(A07, 
+                           isotypes = c('IGHA1', 'IGHA2'), 
+                           clusters = c(4, 0, 1, 5))
+
+FeaturePlot(object = A07, 
+            reduction.use = 'umap',
+            features.plot = c('IGHA1' ,'IGHA2'), # change gene names
+            cells.use = IGHA.cells, # change here cells subset of interest, that you've pulled one step above
+            cols.use = c('grey', 'blue'),
+            pt.size = 2
+            )
+```
+
+
+```{r pull and plot specific clonotypes}
+# the same but for clonotypes
+clones <- pull_clonotype(A07, 
+                            clonotypes = c('clonotype1', 'clonotype2'), 
+                            clusters = c(4, 0, 1, 5))
+
+FeaturePlot(object = A07, 
+            reduction.use = 'umap',
+            features.plot = c('IGHA1' ,'IGHA2'), # change gene names
+            cells.use = clones, # change here cells subset of interest, that you've pulled one step above
+            cols.use = c('grey', 'blue'),
+            pt.size = 2
+            )
+```
+
+## how many cells of a certain clonotype is in specific cluster
+
+```{r clonotypes3}
+# type one or more clonotypes
+clones <- c('clonotype1', 'clonotype2', 'clonotype3')
+
+sapply(clones, function(clone) {
+  Subset_metadata <- A07@meta.data[
+    A07@meta.data$clonotype_id %in% clone,]
+  table(
+    Subset_metadata$res.0.6 # you can choose different resolutions here, for example here is usual res 0.6
+    ) 
+})
+```
+
+
+# DEG analysis between types
+
+```{r DEG analysis between isotypes}
+# for all of the clusters, DEG between isotypes
+# set your working directory
+#setwd('/../../Adam/A07_vdj_analysis')
+
+# when you run this function two excel spreadsheets will be written in your working difectory
+# please take a look that IG isotypes names are right, there should be only heavy chain genes
+Isotypes_DEG(A07)
+
+```
+
+
+```{r DEG between isotypes isotypes in specific cluster}
+# for only cluster 1
+A07_subset <- SubsetData(object = A07, 
+                         ident.use = c('1')) # change clusters here
+
+Isotypes_DEG(A07_subset)
+
+```
+
+
