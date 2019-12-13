@@ -76,8 +76,8 @@ clonotypes_summary <- function(Seurat_obj, n = 10){
   # pull unique info about clonotypes from meta data
   summary <- Seurat_obj@meta.data %>%
     filter(clonotype_id %in% top10clones) %>%
-    select(c(clonotype_id, c_gene, v_gene, d_gene, j_gene, cdr3s_aa, cdr3s_nt)) %>%
-    distinct() %>%
+    group_by(clonotype_id, c_gene, v_gene, d_gene, j_gene, cdr3s_aa, cdr3s_nt) %>%
+    summarise(n = n()) %>%
     arrange(as.numeric(gsub('[a-z]','', clonotype_id)))
 
   write.csv(summary,
