@@ -23,10 +23,8 @@ Imports:
     ggplot2,
     plotly,
     sva,
-    scran,
     ComplexHeatmap,
     circlize,
-    velocyto.R,
     Matrix.utils
 License: for internal use in Soren Brunak's lab
 Encoding: UTF-8
