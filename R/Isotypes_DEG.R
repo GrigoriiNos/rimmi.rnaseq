@@ -60,6 +60,52 @@ Isotypes_DEG <- function(Seurat_obj){
   )
 }
 
+#' This function allows you to calculate DEG for some specific IG Isotypes
+#'
+#' @param Seurat_obj Seurat object with integrated data from VDJ analysis with Isotype assigment
+#'
+#' @keywords DEG, single cell, VDJ analysis, B cells, T cells
+#'
+#' @examples
+#'
+#' Isotypes_DEG(A07)
+#'
+#' @export
+#'
+
+Specific_isotypes_DEG <- function(Seurat_obj,
+                                  iso1,
+                                  iso2,
+                                  filename){
+  library(Seurat)
+
+  Seurat_obj@meta.data <- Seurat_obj@meta.data[names(Seurat_obj@ident),]
+  # replace cell identity from cluster to isotype
+  Seurat_obj@ident <- factor(Seurat_obj@meta.data$c_gene)
+  names(Seurat_obj@ident) <- rownames(Seurat_obj@meta.data)
+
+  isotypes <- grep('IGH[A-Z].*', levels(Seurat_obj@ident), value = T)
+
+  Seurat_obj_sub <- SubsetData(object = Seurat_obj,
+                               ident.use = isotypes
+  )
+  print('calculating markers for specific isotypes')
+  print(grep('IGH[A-Z].*', levels(Seurat_obj_sub@ident), value = T))
+  iso_markers <- FindMarkers(object = Seurat_obj_sub,
+                                   ident.1 = iso1,
+                                   ident.2 = iso2,
+                                   only.pos = F,
+                                   min.pct = 0.25,
+                                   thresh.use = 0.25)
+
+  write.csv(iso_markers,
+            file = filename,
+            quote = F,
+            row.names = T)
+  print('saved isotypes as a csv file')
+}
+
+
 #' This function allows you to pull specific barcodes from the object with specific IG Isotypes from specific clusters
 #'
 #'
