@@ -4,7 +4,7 @@
 \alias{Specific_isotypes_DEG}
 \title{This function allows you to calculate DEG for some specific IG Isotypes}
 \usage{
-Specific_isotypes_DEG(Seurat_obj, iso1, iso2, filename)
+Specific_isotypes_DEG(Seurat_obj, iso1, iso2, filename, clusters)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object with integrated data from VDJ analysis with Isotype assigment}

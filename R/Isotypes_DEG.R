@@ -76,10 +76,12 @@ Isotypes_DEG <- function(Seurat_obj){
 Specific_isotypes_DEG <- function(Seurat_obj,
                                   iso1,
                                   iso2,
-                                  filename){
+                                  filename,
+                                  clusters){
   library(Seurat)
 
   Seurat_obj@meta.data <- Seurat_obj@meta.data[names(Seurat_obj@ident),]
+  Seurat_obj <- SubsetData(Seurat_obj, ident.use = clusters)
   # replace cell identity from cluster to isotype
   Seurat_obj@ident <- factor(Seurat_obj@meta.data$c_gene)
   names(Seurat_obj@ident) <- rownames(Seurat_obj@meta.data)
