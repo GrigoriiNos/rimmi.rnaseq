@@ -74,6 +74,7 @@ get_emb <- function(Seurat_obj, emb = c('umap', 'monocle', 'custom')){
 
 preprocess_loom <- function(loom_path, Seurat_obj, emb){
   library(velocyto.R)
+
   # This is generated from the Velocyto python command line tool.
   # You need a loom file before you can proceed
   ldat <- read.loom.matrices(loom_path)
@@ -90,6 +91,7 @@ preprocess_loom <- function(loom_path, Seurat_obj, emb){
   # perform gamma fit on a top/bottom quantiles of expression magnitudes
   fit.quantile <- 0.02
 
+  emb <- emb[colnames(emat),]
   # Estimate the cell-cell distances
   cell.dist <- as.dist(1-armaCor(t(emb)))
   # Main velocity estimation
