@@ -86,7 +86,7 @@ clonotypes_summary <- function(Seurat_obj, n = 10){
     arrange(as.numeric(gsub('[a-z]','', clonotype_id)))
 
   write.csv(summary,
-            file = 'clonotypes_summary',
+            file = 'clonotypes_summary.csv',
             quote = F,
             row.names = F)
   print('clonotypes summary table is written')
