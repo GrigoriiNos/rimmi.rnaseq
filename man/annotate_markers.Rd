@@ -4,7 +4,8 @@
 \alias{annotate_markers}
 \title{Annotation for the cell markers.}
 \usage{
-annotate_markers(markers_table, X = 50, organism = "hsapiens")
+annotate_markers(markers_table, X = 50, organism = "hsapiens",
+  reg = "up")
 }
 \arguments{
 \item{markers_table}{The output of the Seurat::FndAllMarkers function, don't change anything in the column names within it.}

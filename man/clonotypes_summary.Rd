@@ -4,7 +4,7 @@
 \alias{clonotypes_summary}
 \title{This function allows you pull a summary information about your clonotypes}
 \usage{
-clonotypes_summary(Seurat_obj, n = 10)
+clonotypes_summary(Seurat_obj, n = 10, separate_cdr3 = T)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object with integrated data from VDJ analysis with Isotype assigment}

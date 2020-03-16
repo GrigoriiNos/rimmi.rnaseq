@@ -65,24 +65,25 @@ add_vdj <- function(vdj_location, Seurat_obj){
 #' @export
 #'
 
-clonotypes_summary <- function(Seurat_obj, n = 10){
+clonotypes_summary <- function(Seurat_obj, n = 10, separate_cdr3 = T){
 
   # take top n clonotypes
   clonotypes <- table(Seurat_obj@meta.data$clonotype_id)
 
-  top10clones <- clonotypes[
+  topnclones <- clonotypes[
     order(clonotypes, decreasing = T)
     ][1:n]
 
-  top10clones <- names(
-    top10clones
+  topnclones <- names(
+    topnclones
   )
 
   # pull unique info about clonotypes from meta data
   summary <- Seurat_obj@meta.data %>%
-    filter(clonotype_id %in% top10clones) %>%
-    group_by(clonotype_id, c_gene, v_gene, d_gene, j_gene, cdr3s_aa, cdr3s_nt) %>%
+    filter(clonotype_id %in% topnclones) %>%
+    group_by(clonotype_id, c_gene, v_gene, j_gene, cdr3s_aa, cdr3s_nt) %>%
     summarise(n = n()) %>%
+    #tidyr::separate_rows(cdr3s_aa, cdr3s_nt, sep = ';', convert = T) %>%
     arrange(as.numeric(gsub('[a-z]','', clonotype_id)))
 
   write.csv(summary,
