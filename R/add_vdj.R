@@ -46,8 +46,14 @@ add_vdj <- function(vdj_location, Seurat_obj){
   vdj <- pull_vdj(vdj_location)
 
   # Add to the Seurat object's metadata.
-  clono_seurat <- AddMetaData(object=Seurat_obj, metadata=vdj)
-  return(clono_seurat)
+  Seurat_obj@meta.data <- merge(Seurat_obj@meta.data,
+                                vdj,
+                                by = 0,
+                                all.x = T)
+  rownames(Seurat_obj@meta.data) <- Seurat_obj@meta.data$Row.names
+  Seurat_obj@meta.data$Row.names <- NULL
+
+  return(Seurat_obj)
 }
 
 
