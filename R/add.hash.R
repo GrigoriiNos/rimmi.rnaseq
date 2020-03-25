@@ -48,8 +48,6 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name){
   # clustering function for large applications You can also play with additional parameters (see
   # documentation for HTODemux()) to adjust the threshold for classification Here we are using the
   # default settings
-  colnames(Seurat_obj.hashtag@assays$HTO@counts)[colSums(Seurat_obj.hashtag@assays$HTO@counts) < 100]
-  rownames(Seurat_obj.hashtag@assays$HTO@counts)[rowSums(Seurat_obj.hashtag@assays$HTO@counts) < 10000]
   
   #Seurat_obj.hashtag <- HTODemux(Seurat_obj.hashtag, assay = "HTO", positive.quantile = 0.99)
   Seurat_obj.hashtag <- MULTIseqDemux(Seurat_obj.hashtag, assay = "HTO")
@@ -88,7 +86,38 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name){
   Seurat_obj
 }
 
+#' mark tags that you think are useless as such
+#'
+#' This function allows you to  mark tags that you think are useless as such
+#'
+#' @param Seurat_obj  Seurat object
+#' @param useless_tags indexes of tags that you think are useless
+#'
+#' @return Seurat 3 object 
+#'
+#' @keywords Seurat, single cell sequencing, RNA-seq, RNA velocity
+#'
+#' @examples
+#'
+#' throw_away_tags(Seurat_obj, 
+#' useless_tags =  c(1,2,3))
+#'
+#'
+#' @export
 
+throw_away_tags <- function(Seurat_obj, 
+                            useless_tags){
+  # variable with all the tags
+  tags <- unique(Seurat_obj$HTO_classification)
+  # get actual tags here instead of indexes
+  useless_tags <- tags[useless_tags]
+  # save old tags for a back uo
+  Seurat_obj@meta.data$HTO_classification_back_up <- Seurat_obj@meta.data$HTO_classification
+  # change uselesss as such
+  Seurat_obj@meta.data$HTO_classification[Seurat_obj@meta.data$HTO_classification == useless_tags] <- 'useless_tags'
+  
+  Seurat_obj
+}
 
 
 
