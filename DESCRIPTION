@@ -6,11 +6,10 @@ Authors@R:
     person(given = "Grigorii",
            family = "Nos",
            role = c("aut", "cre"),
-           email = "grigorii.nos@cpr.ku.dk")
+           email = "nosgrigoriy@gmail.com")
 Description: Set of handy functions for genomics data analysis for use in RIMMI project.
 Depends:
     R (>= 3.1),
-    qtl (>= 1.30-4)
 Imports:
     Seurat,
     dplyr,
