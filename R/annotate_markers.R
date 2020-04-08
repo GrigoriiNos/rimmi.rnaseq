@@ -28,7 +28,7 @@ annotate_markers <- function(markers_table,
 
   ###
   if (reg == 'up'){
-    markers_table %>%
+    q <- markers_table %>%
       group_by(cluster) %>%
       filter(p_val_adj < 0.05 & avg_logFC > 0) %>%
       top_n(X, abs(avg_logFC)) %>%
@@ -36,11 +36,12 @@ annotate_markers <- function(markers_table,
       do(gprofiler(., organism = organism))
   }
   if (reg == 'down'){
-    markers_table %>%
+    q <- markers_table %>%
       group_by(cluster) %>%
       filter(p_val_adj < 0.05 & avg_logFC < 0) %>%
       top_n(X, abs(avg_logFC)) %>%
       dplyr::select(gene) %>%
       do(gprofiler(., organism = organism))
   }
+  return(q)
 }
