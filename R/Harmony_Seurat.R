@@ -29,38 +29,39 @@
 harmony_for_seurat <- function(merged_object, pc.genes = 'default'){
   library(harmony)
 
-  merged_object <- Seurat::FindVariableGenes(object = merged_object,
-                           mean.function = ExpMean,
-                           dispersion.function = LogVMR,
-                           x.low.cutoff = 0.0125,
-                           x.high.cutoff = 3,
-                           y.cutoff = 0.5)
+  DefaultAssay(merged_object) <- "RNA"
+
+  merged_object <- Seurat::FindVariableFeatures(object = merged_object,
+                                                selection.method = "vst",
+                                                nfeatures = 2000,
+                                                verbose = F)
 
   if (pc.genes == 'default'){
-    pc.gen <-  merged_object@var.genes
+    pc.gen <- VariableFeatures(merged_object)
   }
   if (pc.genes == 'no.ig'){
-    pc.gen <- merged_object@var.genes[!grepl(pattern = "^IG[H,L,K][A-Z][0-9].*", x = merged_object@var.genes)]
+    pc.gen <- VariableFeatures(merged_object)[!grepl(pattern = "^IG[H,L,K][A-Z][0-9].*", x = VariableFeatures(merged_object))]
   }
   if (pc.genes == 'no.tcr'){
-    pc.gen <- merged_object@var.genes[!grep(pattern = "^TR[A,B][D,J,V].*", x = merged_object@var.genes)]
+    pc.gen <- VariableFeatures(merged_object)[!grepl(pattern = "^TR[A,B][D,J,V].*", x = VariableFeatures(merged_object))]
   }
 
-  merged_object <- RunPCA(object = merged_object,
-                pc.genes = pc.gen,
-                pcs.compute = 50,
-                do.print = F, pcs.print = 1:5,
-                genes.print = 5)
+  merged_object <- merged_object %>%
+    ScaleData() %>%
+    RunPCA(pc.genes = pc.gen,
+           pcs.compute = 50) %>%
+    RunTSNE()
 
-  samples <- unique(merged_object@meta.data$orig.ident)
+  samples <- unique(merged_object$orig.ident)
 
-  pca <- merged_object@dr$pca@cell.embeddings
+  pca <- merged_object@reductions$pca@cell.embeddings
 
   harmony_emb <- HarmonyMatrix(pca,
                                merged_object@meta.data$orig.ident,
-                               theta=2, do_pca=FALSE)
+                               theta=2,
+                               do_pca=FALSE)
 
-  merged_object@dr$harmony <- harmony_emb
+  merged_object@reductions$tsne@cell.embeddings <- harmony_emb
 
   merged_object
 }
