@@ -26,7 +26,12 @@
 #' @export
 #'
 
-harmony_for_seurat <- function(merged_object, pc.genes = 'default'){
+harmony_for_seurat <- function(merged_object,
+                               pc.genes = 'default',
+                               pcs = 50,
+                               theta = 2,
+                               lambda = 1,
+                               sigma = 0.1){
   library(harmony)
 
   DefaultAssay(merged_object) <- "RNA"
@@ -49,7 +54,7 @@ harmony_for_seurat <- function(merged_object, pc.genes = 'default'){
   merged_object <- merged_object %>%
     ScaleData() %>%
     RunPCA(pc.genes = pc.gen,
-           pcs.compute = 50) %>%
+           pcs.compute = pcs) %>%
     RunTSNE()
 
   samples <- unique(merged_object$orig.ident)
@@ -58,7 +63,9 @@ harmony_for_seurat <- function(merged_object, pc.genes = 'default'){
 
   harmony_emb <- HarmonyMatrix(pca,
                                merged_object@meta.data$orig.ident,
-                               theta=2,
+                               theta=theta,
+                               lambda = lambda,
+                               sigma = sigma,
                                do_pca=FALSE)
 
   merged_object@reductions$tsne@cell.embeddings <- harmony_emb

@@ -39,3 +39,7 @@ dot_plot_topXgenes <- function(markers_table, X = 5, Seurat_obj){
     x.lab.rot = T
   )
 }
+
+
+set.seed(100)
+rnorm(n = 100, mean = 0, sd = 2)

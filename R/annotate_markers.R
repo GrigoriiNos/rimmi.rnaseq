@@ -24,7 +24,6 @@ annotate_markers <- function(markers_table,
                              organism = 'hsapiens',
                              reg = 'up'){
   library(gProfileR)
-  library(dplyr)
 
   ###
   if (reg == 'up'){

@@ -36,7 +36,7 @@ put_signature <- function(markers, Seurat_obj, title){
   ### function to have a complete list of markers
   complete <- function(markers, Seurat_obj) {
     markers <-  as.character(markers[complete.cases(markers)])
-    markers[markers %in% rownames(Seurat_obj@data)]
+    markers[markers %in% rownames(Seurat_obj@assays$RNA@data)]
   }
   ### convert it to complete list
   markers <- complete(markers, Seurat_obj)
@@ -47,10 +47,10 @@ put_signature <- function(markers, Seurat_obj, title){
     rowSums(q) / nrow(q)
   }
   ### put this quantifications to the matrix on Seurat object, among the genes
-  Seurat_obj@data <- rbind(markers_expr(Seurat_obj, markers),
-                    Seurat_obj@data)
+  Seurat_obj@assays$RNA@data <- rbind(markers_expr(Seurat_obj, markers),
+                    Seurat_obj@assays$RNA@data)
   ### name it
-  rownames(Seurat_obj@data)[1] <- title
+  rownames(Seurat_obj@assays$RNA@data)[1] <- title
   ### return the object with it
   Seurat_obj
 }

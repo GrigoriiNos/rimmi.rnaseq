@@ -53,14 +53,32 @@ volcano_plot <- function(edgeR_output, title = 'volcano plot'){
 #'
 #' @export
 
-volcano_pl <- function(response, logFC_th = 0.5, title){
+# volcano plots for markers
+volcano_pl <- function(response, ES_th = 0.5, title){
   table <- response %>%
-    mutate(`-log10p` = -log(adj.P.Val, 10)) %>%
-    mutate(col = ifelse((adj.P.Val < 0.05 & abs(logFC) > 0.5), 'red', 'grey'))
+    mutate(`-log10p` = -log10(adj.P.Val)) %>%
+    mutate(conclusion = ifelse(response$adj.P.Val < 0.05 & response$logFC > ES_th,
+                               'sign_up',
+                               ifelse(response$adj.P.Val < 0.05 & response$logFC < -ES_th,
+                                      'sign_down',
+                                      'not_sign')))
 
-  ggplot(table, aes(x = logFC, y = `-log10p`, color = col)) +
+  if (length(unique(table$conclusion)) == 3){
+    colours <- c("black", "blue", "red")
+  }
+  if (all(table$conclusion %in% c('sign_up', 'not_sign'))){
+    colours <- c("black", "red")
+  }
+  if (all(table$conclusion %in% c('sign_down', 'not_sign'))){
+    colours <- c("black", "blue")
+  }
+  if (length(unique(table$conclusion)) == 1){
+    colours <- c("black")
+  }
+
+  ggplot(table, aes(x = logFC, y = `-log10p`, color = conclusion)) +
     geom_point() +
-    scale_color_manual(breaks = c("8", "6"), values=c("blue", "red")) +
+    scale_color_manual(values=colours) +
     geom_label_repel(aes(label = gene),
                      box.padding   = 0.35,
                      point.padding = 0.5,

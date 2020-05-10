@@ -4,14 +4,14 @@
 \alias{volcano_pl}
 \title{plot volcano plot 2}
 \usage{
-volcano_pl(response, logFC_th = 0.5, title)
+volcano_pl(response, ES_th = 0.5, title)
 }
 \arguments{
 \item{response}{table with DEG}
 
-\item{logFC_th}{LogFC threshold}
-
 \item{title}{the name of your plot}
+
+\item{logFC_th}{LogFC threshold}
 }
 \value{
 volcano plot

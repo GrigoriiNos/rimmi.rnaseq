@@ -4,7 +4,8 @@
 \alias{harmony_for_seurat}
 \title{use the batch effect correction method harmony on Seurat objects}
 \usage{
-harmony_for_seurat(merged_object, pc.genes = "default")
+harmony_for_seurat(merged_object, pc.genes = "default", pcs = 50,
+  theta = 2, lambda = 1, sigma = 0.1)
 }
 \arguments{
 \item{merged_object}{pre-merged Seurat object}
