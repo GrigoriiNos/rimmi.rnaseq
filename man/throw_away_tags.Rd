@@ -19,7 +19,7 @@ This function allows you to  mark tags that you think are useless as such
 }
 \examples{
 
-throw_away_tags(Seurat_obj, 
+throw_away_tags(Seurat_obj,
 useless_tags =  c(1,2,3))
 
 

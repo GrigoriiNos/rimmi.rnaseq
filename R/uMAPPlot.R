@@ -73,26 +73,42 @@ uMAPPlot <- function(Seurat_obj,
 #' @export
 #'
 
-umap_plot3d <- function(obj, dims = 1:10){
+umap_plot3d <- function(Seurat_obj,
+                        coloring = c('clusters', 'sample', 'tissue', 'condition'),
+                        reduction = c('pca', 'harmony', 'mnn', 'cca.aligned')){
   library(plotly)
   library(Seurat)
   # recalculate umaps with 3 dimensions
-  if (is.null(obj@dr$cca.aligned)){
-    obj <- RunUMAP(obj,
-                   reduction.use = "pca",
-                   dims.use = dims,
-                   max.dim = 3)
-  } else {
-    obj <- RunUMAP(obj,
-                   reduction.use = "cca.aligned",
-                   dims.use = dims,
-                   max.dim = 3)
+
+  if (reduction == 'pca'){
+    dims <- Seurat_obj@commands$RunUMAP.RNA.pca$dims
+  } else if ((reduction == 'cca.aligned')){
+    dims <- Seurat_obj@commands$RunUMAP.RNA.cca.aligned$dims
+  } else if ((reduction == 'harmony')){
+    dims <- Seurat_obj@commands$RunUMAP.RNA.harmony$dims
+  } else if (reduction == 'mnn'){
+    dims <- Seurat_obj@commands$RunUMAP.RNA.mnn$dims
+  }
+
+  Seurat_obj <- RunUMAP(Seurat_obj,
+                 reduction = reduction,
+                 dims = dims,
+                 n.components = 3)
+
+  if (coloring == 'clusters'){
+    coloring <- Idents(Seurat_obj)
+  } else if (coloring == 'sample'){
+    coloring <- Seurat_obj$sample
+  } else if (coloring == 'tissue'){
+    coloring <- Seurat_obj$tissue
+  } else if (coloring == 'condition'){
+    coloring <- Seurat_obj$condition
   }
   # construct new data frame with umaps and cell identities
-  df <- data.frame(umap1 = obj@dr$umap@cell.embeddings[,1],
-                   umap2 = obj@dr$umap@cell.embeddings[,2],
-                   umap3 = obj@dr$umap@cell.embeddings[,3],
-                   cell = obj@ident)
+  df <- data.frame(umap1 = Seurat_obj@reductions$umap@cell.embeddings[,1],
+                   umap2 = Seurat_obj@reductions$umap@cell.embeddings[,2],
+                   umap3 = Seurat_obj@reductions$umap@cell.embeddings[,3],
+                   cell = coloring)
 
   # plot the fancy 3d scatter plot ; D
   plot_ly(df, x = ~umap1, y = ~umap2, z = ~umap3, color = ~cell) %>%

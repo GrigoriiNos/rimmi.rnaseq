@@ -40,6 +40,7 @@ put_signature <- function(markers, Seurat_obj, title){
   }
   ### convert it to complete list
   markers <- complete(markers, Seurat_obj)
+  DefaultAssay(Seurat_obj) <- 'RNA'
   ### function to have the average quantification for all your markers
   markers_expr <- function(Seurat_obj, markers) {
     q <- AddModuleScore(Seurat_obj, markers)
