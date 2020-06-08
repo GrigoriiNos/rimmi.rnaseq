@@ -34,10 +34,6 @@
 put_signature <- function(markers, Seurat_obj, title){
   library(Seurat)
   ### function to have a complete list of markers
-  complete <- function(markers, Seurat_obj) {
-    markers <-  as.character(markers[complete.cases(markers)])
-    markers[markers %in% rownames(Seurat_obj@assays$RNA@data)]
-  }
   ### convert it to complete list
   markers <- complete(markers, Seurat_obj)
   DefaultAssay(Seurat_obj) <- 'RNA'
@@ -54,4 +50,9 @@ put_signature <- function(markers, Seurat_obj, title){
   rownames(Seurat_obj@assays$RNA@data)[1] <- title
   ### return the object with it
   Seurat_obj
+}
+
+complete <- function(markers, Seurat_obj) {
+  markers <-  as.character(markers[complete.cases(markers)])
+  markers[markers %in% rownames(Seurat_obj@assays$RNA@data)]
 }
