@@ -15,22 +15,24 @@
 #' @export
 #'
 
-scatter_libdepth <- function(Seurat_obj){
+lib.qc_plot <- function(Seurat_obj){
   library(ggplot2)
-  library(cowplot)
 
-  df <- data.frame(umap1 = Seurat_obj@dr$umap@cell.embeddings[,1 ],
-                   umap2 = Seurat_obj@dr$umap@cell.embeddings[,2 ],
-                   cells = as.character(Seurat_obj@ident),
-                   lsize = Seurat_obj@meta.data$nUMI,
-                   ngene = Seurat_obj@meta.data$nGene
-                   )
+  qc.df <- data.frame(row.names = rownames(A14@meta.data),
+                      umap1 = A14@reductions$umap@cell.embeddings[,1],
+                      umap2 = A14@reductions$umap@cell.embeddings[,2],
+                      nUMI = A14$nCount_RNA,
+                      nGenes = A14$nFeature_RNA,
+                      cluster = Idents(A14))
 
-  p1 <- ggplot(df, aes(x = umap1, y = umap2, col = cells))+
-          geom_point(aes(size = lsize)) +
-          scale_size_continuous(range = c(0.001, 3))
-  p2 <- ggplot(df, aes(x = umap1, y = umap2, col = cells))+
-          geom_point(aes(size = ngene)) +
-          scale_size_continuous(range = c(0.001, 3))
-  plot_grid(p1, p2)
+  p1 <- ggplot(qc.df, aes(x = umap1, y = umap2, colour = cluster)) +
+    geom_point(aes(size = nUMI)) +
+    theme_bw()
+
+
+  p2 <- ggplot(qc.df, aes(x = umap1, y = umap2, colour = cluster)) +
+    geom_point(aes(size = nGenes)) +
+    theme_bw()
+
+  cowplot::plot_grid(p1, p2)
 }
