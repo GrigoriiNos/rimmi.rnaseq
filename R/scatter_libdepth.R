@@ -18,12 +18,12 @@
 lib.qc_plot <- function(Seurat_obj){
   library(ggplot2)
 
-  qc.df <- data.frame(row.names = rownames(A14@meta.data),
-                      umap1 = A14@reductions$umap@cell.embeddings[,1],
-                      umap2 = A14@reductions$umap@cell.embeddings[,2],
-                      nUMI = A14$nCount_RNA,
-                      nGenes = A14$nFeature_RNA,
-                      cluster = Idents(A14))
+  qc.df <- data.frame(row.names = rownames(Seurat_obj@meta.data),
+                      umap1 = Seurat_obj@reductions$umap@cell.embeddings[,1],
+                      umap2 = Seurat_obj@reductions$umap@cell.embeddings[,2],
+                      nUMI = Seurat_obj$nCount_RNA,
+                      nGenes = Seurat_obj$nFeature_RNA,
+                      cluster = Idents(Seurat_obj))
 
   p1 <- ggplot(qc.df, aes(x = umap1, y = umap2, colour = cluster)) +
     geom_point(aes(size = nUMI)) +
