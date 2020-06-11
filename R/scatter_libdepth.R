@@ -22,6 +22,7 @@ lib.qc_plot <- function(Seurat_obj){
                       umap1 = Seurat_obj@reductions$umap@cell.embeddings[,1],
                       umap2 = Seurat_obj@reductions$umap@cell.embeddings[,2],
                       nUMI = Seurat_obj$nCount_RNA,
+                      pMito = Seurat_obj$percent.mt,
                       nGenes = Seurat_obj$nFeature_RNA,
                       cluster = Idents(Seurat_obj))
 
@@ -34,5 +35,9 @@ lib.qc_plot <- function(Seurat_obj){
     geom_point(aes(size = nGenes)) +
     theme_bw()
 
-  cowplot::plot_grid(p1, p2)
+  p3 <- ggplot(qc.df, aes(x = umap1, y = umap2, colour = cluster)) +
+    geom_point(aes(size = pMito)) +
+    theme_bw()
+
+  cowplot::plot_grid(p1, p2, p3)
 }
