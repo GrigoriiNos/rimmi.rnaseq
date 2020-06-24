@@ -1,3 +1,27 @@
+#' gets you an overlap of gene list with your object
+#'
+#' This function allows you to calculate an average expression for the list of genes of your interest.
+#'
+#' @param markers yout gene set, it can be a set of markers for cell type identification or genes involved in the certain pathway that you want localise
+#'
+#' @param Seurat_obj your Seurat object
+#'
+#' @return overlapping gene list
+#'
+#' @keywords GO, KEGG, HPA, single cell, RNA-seq
+#'
+#' @examples
+#'
+#' Ccl19hi.TRC <- complete(rodda$Ccl19hi.TRC, PP.combined)
+#'
+#' @export
+#'
+
+complete <- function(markers, Seurat_obj) {
+  markers <-  as.character(markers[complete.cases(markers)])
+  markers[markers %in% rownames(Seurat_obj@assays$RNA@data)]
+}
+
 #' Calculate average expression for gene set.
 #'
 #' This function allows you to calculate an average expression for the list of genes of your interest.
@@ -52,7 +76,5 @@ put_signature <- function(markers, Seurat_obj, title){
   Seurat_obj
 }
 
-complete <- function(markers, Seurat_obj) {
-  markers <-  as.character(markers[complete.cases(markers)])
-  markers[markers %in% rownames(Seurat_obj@assays$RNA@data)]
-}
+
+
