@@ -4,15 +4,14 @@
 \alias{pseudo.bulk.DEG}
 \title{apply DESeq for DEG pseudo bulk collapsed samples}
 \usage{
-pseudo.bulk.DEG(Seurat_sub.obj, thresh.pv = 0.4,
-  show.genes = c("CCL19", "CCL21A"))
+pseudo.bulk.DEG(Seurat_sub.obj, show.genes = c("CCL19", "CCL21A"))
 }
 \arguments{
-\item{thresh.pv}{display genes with at least this p value}
-
 \item{show.genes}{additional genes to display}
 
 \item{Seurat_obj}{your Seurat object}
+
+\item{thresh.pv}{display genes with at least this p value}
 }
 \value{
 DEG table
