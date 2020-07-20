@@ -65,7 +65,9 @@ put_signature <- function(markers, Seurat_obj, title){
   markers_expr <- function(Seurat_obj, markers) {
     q <- AddModuleScore(Seurat_obj, markers)
     q <- q@meta.data[grepl("Cluster" ,colnames(q@meta.data))]
-    rowSums(q) / nrow(q)
+    #rowSums(q) / nrow(q)
+    rowSums(q) #/ median(rowSums(q))
+    #scale(rowSums(q))[,1]
   }
   ### put this quantifications to the matrix on Seurat object, among the genes
   Seurat_obj@assays$RNA@data <- rbind(markers_expr(Seurat_obj, markers),

@@ -35,7 +35,7 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name){
 
   # Confirm that the HTO have the correct names
   rownames(hash.matrix)
-  hash.matrix <- hash.matrix + 1
+  #hash.matrix <- hash.matrix + 1
 
   # Setup Seurat object
   Seurat_obj.hashtag <- CreateSeuratObject(counts = Seurat_obj.umis)
