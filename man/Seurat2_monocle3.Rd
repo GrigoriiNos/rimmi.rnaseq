@@ -4,9 +4,13 @@
 \alias{Seurat2_monocle3}
 \title{Run Velocyto analysis on your Seurat2 object}
 \usage{
-Seurat2_monocle3(Seurat_obj, clus_var = c("res.0.6", "res.0.8", "res.1",
-  "celltype"), multi_samples = T, samples_var = c("condition",
-  "sample"), cell_cycle = F)
+Seurat2_monocle3(
+  Seurat_obj,
+  clus_var = c("res.0.6", "res.0.8", "res.1", "celltype"),
+  multi_samples = T,
+  samples_var = c("condition", "sample"),
+  cell_cycle = F
+)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object}

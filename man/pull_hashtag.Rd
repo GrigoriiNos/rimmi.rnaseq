@@ -4,8 +4,7 @@
 \alias{pull_hashtag}
 \title{This function allows you to pull specific barcodes from the object with specific IG hashtags from specific clusters}
 \usage{
-pull_hashtag(Seurat_obj, hashtags, demult.method = "HTODemux",
-  clusters = NULL)
+pull_hashtag(Seurat_obj, hashtags, demult.method = "HTODemux", clusters = NULL)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object with integrated data from VDJ analysis with Ihashtag assigment}

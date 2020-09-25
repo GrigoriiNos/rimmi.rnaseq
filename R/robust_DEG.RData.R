@@ -13,6 +13,8 @@
 
 
 Hglm.deg <- function(Seurat_obj,
+                     condition = 'condition',
+                     cell.types = 'RNA_snn_res.0.5',
                      model = c('glm0', 'glm', 'glmer')){
 
   library(tidyverse)
@@ -21,7 +23,10 @@ Hglm.deg <- function(Seurat_obj,
   library(ggrepel)
   library(ggplot2)
 
-  metadata <- Seurat_obj@meta.data[,c('nCount_RNA','sample','tissue','condition','RNA_snn_res.0.5')]
+  metadata <- Seurat_obj@meta.data[,c('nCount_RNA',
+                                      'orig.ident',
+                                      condition,
+                                      cell.types)]
 
   gene_data <- t(Seurat_obj@assays$RNA@counts)
   gene_data <- gene_data[, colnames(gene_data) %in% VariableFeatures(Seurat_obj)]
@@ -109,20 +114,23 @@ Hglm.deg <- function(Seurat_obj,
 #' @export
 
 pseudo.bulk.DEG <- function(Seurat_sub.obj,
+                            sample = 'orig.ident',
+                            condition = 'condition',
                             show.genes = c('CCL19', 'CCL21A')){
-  collapsed.list <- lapply(SplitObject(Seurat_sub.obj, 'sample'),
+
+  collapsed.list <- lapply(Seurat::SplitObject(Seurat_sub.obj, sample),
                            function(sample)
                              {rowSums(as.matrix(sample@assays$RNA@counts))
                              }
                            )
 
   design <- unique(
-    Seurat_sub.obj@meta.data[,c('sample', 'condition')]
+    Seurat_sub.obj@meta.data[,c(sample, condition)]
   )
 
   counts <- as.data.frame(collapsed.list)
 
-  counts <- counts[,design$sample] %>%
+  counts <- counts[,design[sample][,1]] %>%
     rownames_to_column() %>%
     filter(rowname %in% VariableFeatures(Seurat_sub.obj))
 
@@ -130,7 +138,7 @@ pseudo.bulk.DEG <- function(Seurat_sub.obj,
 
   dds <- DESeqDataSetFromMatrix(countData=counts,
                                 colData=design,
-                                design=model.matrix(~design$condition),
+                                design=model.matrix(~design[condition][,1]),
                                 tidy = TRUE)
 
   dds <- DESeq(dds)
@@ -156,14 +164,30 @@ pseudo.bulk.DEG <- function(Seurat_sub.obj,
 #' @export
 
 list.to.table <- function(deg.table){
-  deg.table <- lapply(deg.table, function(df) {
-    df <- df[order(abs(df$effect_size), decreasing = T),]
-    df$sign <- ifelse(df$pval < 0.05, '**','')
-  })
 
-  deg.tables <- do.call('bind_rows', deg.table)
-  deg.tables$cluster <- rep(0:(length(deg.table)-1), each = nrow(deg.table[[1]]))
-  deg.tables
+  if (is.null(names(deg.table))){
+    deg.table <- lapply(deg.table, function(df) {
+      df <- df[order(abs(df$effect_size), decreasing = T),]
+      df$pval[is.na(df$pval)] <- 1
+      df$sign <- ifelse(df$pval < 0.05, '**','')
+      df
+    })
+
+    deg.tables <- do.call('bind_rows', deg.table)
+    deg.tables$cluster <- rep(0:(length(deg.table)-1), each = nrow(deg.table[[1]]))
+    deg.tables
+  } else {
+    deg.table <- lapply(deg.table, function(df) {
+      df <- df[order(abs(df$effect_size), decreasing = T),]
+      df$pval[is.na(df$pval)] <- 1
+      df$sign <- ifelse(df$pval < 0.05, '**','')
+      df
+    })
+
+    deg.tables <- do.call('bind_rows', deg.table)
+    deg.tables$cluster <- rep(names(deg.table), each = nrow(deg.table[[1]]))
+    deg.tables
+  }
 }
 
 #' plot volcano plot 2

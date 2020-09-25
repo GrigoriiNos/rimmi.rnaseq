@@ -4,7 +4,12 @@
 \alias{pseudo.bulk.DEG}
 \title{apply DESeq for DEG pseudo bulk collapsed samples}
 \usage{
-pseudo.bulk.DEG(Seurat_sub.obj, show.genes = c("CCL19", "CCL21A"))
+pseudo.bulk.DEG(
+  Seurat_sub.obj,
+  sample = "orig.ident",
+  condition = "condition",
+  show.genes = c("CCL19", "CCL21A")
+)
 }
 \arguments{
 \item{show.genes}{additional genes to display}

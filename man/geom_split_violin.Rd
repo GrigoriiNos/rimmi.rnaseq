@@ -4,10 +4,19 @@
 \alias{geom_split_violin}
 \title{ggplot extension for split violin plot}
 \usage{
-geom_split_violin(mapping = NULL, data = NULL, stat = "ydensity",
-  position = "identity", ..., draw_quantiles = NULL, trim = TRUE,
-  scale = "area", na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE)
+geom_split_violin(
+  mapping = NULL,
+  data = NULL,
+  stat = "ydensity",
+  position = "identity",
+  ...,
+  draw_quantiles = NULL,
+  trim = TRUE,
+  scale = "area",
+  na.rm = FALSE,
+  show.legend = NA,
+  inherit.aes = TRUE
+)
 }
 \value{
 ggplot extension

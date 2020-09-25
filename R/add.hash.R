@@ -68,22 +68,31 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name){
   Idents(Seurat_obj.hashtag) <- "HTO_maxID"
 
   DefaultAssay(Seurat_obj.hashtag) <- 'HTO'
+  try({
+    Ridge <- RidgePlot(Seurat_obj.hashtag,
+                       assay = "HTO",
+                       features = rownames(Seurat_obj.hashtag[["HTO"]])[1:2], ncol = 2)
+    ggsave(paste0(sample_name, '_RidgePlot_QC.jpg'), Ridge, width = 15, height = 12)
 
-  Ridge <- RidgePlot(Seurat_obj.hashtag, assay = "HTO", features = rownames(Seurat_obj.hashtag[["HTO"]])[1:2], ncol = 2)
-  ggsave(paste0(sample_name, '_RidgePlot_QC.jpg'), Ridge)
+    Feat <- FeatureScatter(Seurat_obj.hashtag,
+                           feature1 = rownames(Seurat_obj.hashtag[["HTO"]])[1],
+                           feature2 = rownames(Seurat_obj.hashtag[["HTO"]])[2])
 
-  Feat <- FeatureScatter(Seurat_obj.hashtag, feature1 = "tag1-GTCAACTCTTTAGCG", feature2 = "tag2-TGATGGCCTATTGGG")
-  ggsave(paste0(sample_name, '_FeatureScatter_QC.jpg'), Feat)
+    ggsave(paste0(sample_name, '_FeatureScatter_QC.jpg'), Feat, width = 15, height = 12)
 
-  Idents(Seurat_obj.hashtag) <- Seurat_obj.hashtag@meta.data$HTO_classification
-  #Idents(Seurat_obj.hashtag) <- Seurat_obj.hashtag@meta.data$MULTI_classification
+    Idents(Seurat_obj.hashtag) <- Seurat_obj.hashtag@meta.data$HTO_classification
 
-  Vld <- VlnPlot(Seurat_obj.hashtag, features = "nCount_RNA", pt.size = 0.1, log = TRUE)+
-    theme(legend.position = "none")
-  ggsave(paste0(sample_name, '_VlnPlot_QC.jpg'), Vld)
+    Vld <- VlnPlot(Seurat_obj.hashtag, features = "nCount_RNA", pt.size = 0.1, log = TRUE)+
+      theme(legend.position = "none")
+    ggsave(paste0(sample_name, '_VlnPlot_QC.jpg'), Vld, width = 20, height = 12)
+  })
 
-  meta <- merge(Seurat_obj@meta.data,
-                Seurat_obj.hashtag@meta.data[, c('nCount_HTO', 'nFeature_HTO', 'HTO_maxID', 'HTO_secondID', 'HTO_margin', 'HTO_classification', 'HTO_classification.global', 'hash.ID')],
+  meta <- merge(Seurat_obj@meta.data[, !(colnames(Seurat_obj@meta.data) %in% c('nCount_HTO', 'nFeature_HTO', 'HTO_maxID',
+                                                                               'HTO_secondID', 'HTO_margin', 'HTO_classification',
+                                                                               'HTO_classification.global', 'hash.ID'))],
+                Seurat_obj.hashtag@meta.data[, c('nCount_HTO', 'nFeature_HTO', 'HTO_maxID',
+                                                 'HTO_secondID', 'HTO_margin', 'HTO_classification',
+                                                 'HTO_classification.global', 'hash.ID')],
                 by = 0,
                 all.x = T)
 

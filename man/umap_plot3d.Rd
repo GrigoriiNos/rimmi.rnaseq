@@ -4,8 +4,11 @@
 \alias{umap_plot3d}
 \title{Plot your clusters in 3 dimensions}
 \usage{
-umap_plot3d(Seurat_obj, coloring = c("clusters", "sample", "tissue",
-  "condition"), reduction = c("pca", "harmony", "mnn", "cca.aligned"))
+umap_plot3d(
+  Seurat_obj,
+  coloring = c("clusters", "sample", "tissue", "condition"),
+  reduction = c("pca", "harmony", "mnn", "cca.aligned")
+)
 }
 \arguments{
 \item{obj}{your Seurat object}

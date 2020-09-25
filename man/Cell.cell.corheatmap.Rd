@@ -4,9 +4,14 @@
 \alias{Cell.cell.corheatmap}
 \title{heatmap for cell-cell correlation matrix}
 \usage{
-Cell.cell.corheatmap(Seurat_obj, do.cluster = F, colours = "random",
-  cor.method = "spearman", imputed = F,
-  title = "Cell-Cell corellation heatmap")
+Cell.cell.corheatmap(
+  Seurat_obj,
+  do.cluster = F,
+  colours = "random",
+  cor.method = "spearman",
+  imputed = F,
+  title = "Cell-Cell corellation heatmap"
+)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object}

@@ -4,7 +4,12 @@
 \alias{Hglm.deg}
 \title{apply DEG with multiple glms on Seruat object with case control meta data}
 \usage{
-Hglm.deg(Seurat_obj, model = c("glm0", "glm", "glmer"))
+Hglm.deg(
+  Seurat_obj,
+  condition = "condition",
+  cell.types = "RNA_snn_res.0.5",
+  model = c("glm0", "glm", "glmer")
+)
 }
 \arguments{
 \item{Seurat_obj}{your Seurat object}

@@ -4,8 +4,14 @@
 \alias{Specific_hashtags_DEG}
 \title{This function allows you to calculate DEG for some specific IG hashtags}
 \usage{
-Specific_hashtags_DEG(Seurat_obj, hash1, hash2, filename,
-  demult.method = "HTODemux", clusters = NULL)
+Specific_hashtags_DEG(
+  Seurat_obj,
+  hash1,
+  hash2,
+  filename,
+  demult.method = "HTODemux",
+  clusters = NULL
+)
 }
 \arguments{
 \item{Seurat_obj}{Seurat object with integrated data from VDJ analysis with Ihashtag assigment}
