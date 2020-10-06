@@ -16,7 +16,7 @@
 #'
 #' @export
 
-add_hash <- function(hash.matrix, Seurat_obj, sample_name){
+add_hash <- function(hash.matrix, Seurat_obj, sample_name, quantile_theshold = 0.99){
 
   #cells0tags <- which(apply(hash.matrix, 2, function(x) all(x == 0)))
   #tags0everywhere <- which(apply(hash.matrix, 1, function(x) all(x == 0)))
@@ -39,7 +39,7 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name){
 
   # Setup Seurat object
   Seurat_obj.hashtag <- CreateSeuratObject(counts = Seurat_obj.umis)
-
+  rm(Seurat_obj.umis)
   # Normalize RNA data with log normalization
   Seurat_obj.hashtag <- NormalizeData(Seurat_obj.hashtag)
   # Find and scale variable features
@@ -56,7 +56,7 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name){
   # documentation for HTODemux()) to adjust the threshold for classification Here we are using the
   # default settings
 
-  Seurat_obj.hashtag <- HTODemux(Seurat_obj.hashtag, assay = "HTO", positive.quantile = 0.99)
+  Seurat_obj.hashtag <- HTODemux(Seurat_obj.hashtag, assay = "HTO", positive.quantile = quantile_theshold)
   #Seurat_obj.hashtag <- MULTIseqDemux(Seurat_obj.hashtag, assay = "HTO")
 
   # Global classification results
@@ -78,9 +78,29 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name){
                            feature1 = rownames(Seurat_obj.hashtag[["HTO"]])[1],
                            feature2 = rownames(Seurat_obj.hashtag[["HTO"]])[2])
 
-    ggsave(paste0(sample_name, '_FeatureScatter_QC.jpg'), Feat, width = 15, height = 12)
+    ggsave(paste0(sample_name, '_FeatureScatter_QC12.jpg'), Feat, width = 15, height = 12)
+
+    Feat <- FeatureScatter(Seurat_obj.hashtag,
+                           feature1 = rownames(Seurat_obj.hashtag[["HTO"]])[3],
+                           feature2 = rownames(Seurat_obj.hashtag[["HTO"]])[4])
+
+    ggsave(paste0(sample_name, '_FeatureScatter_QC34.jpg'), Feat, width = 15, height = 12)
+
+    Feat <- FeatureScatter(Seurat_obj.hashtag,
+                           feature1 = rownames(Seurat_obj.hashtag[["HTO"]])[2],
+                           feature2 = rownames(Seurat_obj.hashtag[["HTO"]])[5])
+
+    ggsave(paste0(sample_name, '_FeatureScatter_QC25.jpg'), Feat, width = 15, height = 12)
+
+    Feat <- FeatureScatter(Seurat_obj.hashtag,
+                           feature1 = rownames(Seurat_obj.hashtag[["HTO"]])[1],
+                           feature2 = rownames(Seurat_obj.hashtag[["HTO"]])[5])
+
+    ggsave(paste0(sample_name, '_FeatureScatter_QC15.jpg'), Feat, width = 15, height = 12)
 
     Idents(Seurat_obj.hashtag) <- Seurat_obj.hashtag@meta.data$HTO_classification
+
+    hto.heatmap(Seurat_obj.hashtag)
 
     Vld <- VlnPlot(Seurat_obj.hashtag, features = "nCount_RNA", pt.size = 0.1, log = TRUE)+
       theme(legend.position = "none")
@@ -137,6 +157,38 @@ throw_away_tags <- function(Seurat_obj,
   Seurat_obj
 }
 
+#' hto heatmap
+#'
+#'
+#' @param Seurat_obj.hashtag  Seurat object
+#'
+#' @export
+
+hto.heatmap <- function(Seurat_obj.hashtag){
+  hto.mat <- Seurat_obj.hashtag@assays$HTO@data[1:5,]
+  rownames(hto.mat) <- gsub('[A-Z]|-', '', rownames(hto.mat))
+  tagshort <- Seurat_obj.hashtag$HTO_classification_short
+  tagglobal <- Seurat_obj.hashtag$HTO_classification.global
+
+  tagsann <- HeatmapAnnotation(hto.class = tagshort,
+                               global = tagglobal,
+                               which = 'col',
+                               annotation_width = unit(c(1, 4), 'cm'),
+                               gap = unit(1, 'mm'))
+
+  hmap <- Heatmap(
+    hto.mat,
+    column_order = order(tagshort),
+    show_row_names = T,
+    show_column_names = FALSE,
+    cluster_rows = F,
+    cluster_columns = F,
+    clustering_method_rows = "ward.D2",
+    clustering_method_columns = "ward.D2",
+    top_annotation=tagsann)
+
+  draw(hmap, heatmap_legend_side="left", annotation_legend_side="right")
+}
 
 
 

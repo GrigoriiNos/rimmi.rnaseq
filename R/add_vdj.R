@@ -26,17 +26,17 @@ pull_vdj <- function(vdj_location){
 
   # Only keep the barcode, isotype and clonotype columns.
   # We'll get additional clonotype info from the clonotype table.
-  vdj <- vdj[,c("barcode", "raw_clonotype_id", "c_gene", "v_gene", "d_gene", "j_gene")]
-  names(vdj)[names(vdj) == "raw_clonotype_id"] <- "clonotype_id"
+  vdj <- vdj[,c("barcode", "raw_clone_id", "ccall", "vcall", "dcall", "jcall")]
+  names(vdj)[names(vdj) == "raw_clone_id"] <- "clone_id"
 
   # Clonotype/isotype-centric info
   clono <- read.csv(paste(vdj_location,"clonotypes.csv", sep=""))
 
-  # Slap the AA sequences onto our original table by clonotype_id.
-  vdj <- merge(vdj, clono[, c("clonotype_id", "cdr3s_aa", "cdr3s_nt")])
+  # Slap the AA sequences onto our original table by clone_id.
+  vdj <- merge(vdj, clono[, c("clone_id", "cdr3s_aa", "cdr3s_nt")])
 
   # Reorder so barcodes are first column and set them as rownames.
-  vdj <- vdj[, c("barcode", "clonotype_id", "c_gene", "v_gene", "d_gene", "j_gene", "cdr3s_aa", "cdr3s_nt")]
+  vdj <- vdj[, c("barcode", "clone_id", "ccall", "vcall", "dcall", "jcall", "cdr3s_aa", "cdr3s_nt")]
   rownames(vdj) <- vdj[,'barcode']
   vdj$barcode <- NULL
   vdj
@@ -93,7 +93,7 @@ add_vdj <- function(vdj_location, Seurat_obj){
 clonotypes_summary <- function(Seurat_obj, n = 10, separate_cdr3 = T){
 
   # take top n clonotypes
-  clonotypes <- table(Seurat_obj@meta.data$clonotype_id)
+  clonotypes <- table(Seurat_obj@meta.data$clone_id)
 
   topnclones <- clonotypes[
     order(clonotypes, decreasing = T)
@@ -105,11 +105,11 @@ clonotypes_summary <- function(Seurat_obj, n = 10, separate_cdr3 = T){
 
   # pull unique info about clonotypes from meta data
   summary <- Seurat_obj@meta.data %>%
-    filter(clonotype_id %in% topnclones) %>%
-    group_by(clonotype_id, c_gene, v_gene, j_gene, cdr3s_aa, cdr3s_nt) %>%
+    filter(clone_id %in% topnclones) %>%
+    group_by(clone_id, c_call, v_call, j_call, junction, junction_aa) %>%
     summarise(n = n()) %>%
     #tidyr::separate_rows(cdr3s_aa, cdr3s_nt, sep = ';', convert = T) %>%
-    arrange(as.numeric(gsub('[a-z]','', clonotype_id)))
+    arrange(as.numeric(gsub('[a-z]','', clone_id)))
 
   write.csv(summary,
             file = 'clonotypes_summary.csv',

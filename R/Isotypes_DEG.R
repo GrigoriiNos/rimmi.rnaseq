@@ -16,18 +16,21 @@ Isotypes_DEG <- function(Seurat_obj){
 
   Seurat_obj@meta.data <- Seurat_obj@meta.data[names(Idents(Seurat_obj)),]
 
-  Seurat_obj$c_gene_short <- gsub('[0-9]', '', Seurat_obj$c_gene)
+  Seurat_obj$c_call_short <- gsub('[0-9]', '', Seurat_obj$c_call)
   # replace cell identity from cluster to isotype
-  Idents(Seurat_obj) <- factor(Seurat_obj@meta.data$c_gene_short)
+  Idents(Seurat_obj) <- factor(Seurat_obj@meta.data$c_call_short)
   names(Idents(Seurat_obj)) <- rownames(Seurat_obj@meta.data)
 
   short_isotypes <- grep('IGH[A-Z]', levels(Idents(Seurat_obj)), value = T)
 
-  Seurat_obj_sub <- SubsetData(Seurat_obj, ident.use = short_isotypes)
+  Seurat_obj_sub <- subset(Seurat_obj,
+                           idents = short_isotypes)
 
   print('calculating markers for short isotypes')
   print(grep('IGH[A-Z].*', levels(Idents(Seurat_obj)), value = T))
   Short_iso_markers <- FindAllMarkers(object = Seurat_obj_sub,
+                                      test.use = 'poisson', # another method
+                                      latent.vars = 'orig.ident', # adjust for sample
                                       only.pos = F,
                                       min.pct = 0.25,
                                       thresh.use = 0.25)
@@ -36,20 +39,22 @@ Isotypes_DEG <- function(Seurat_obj){
   print('saved short isotypes as an excel spreadsheet')
 
   # replace cell identity from cluster to isotype
-  Idents(Seurat_obj) <- factor(Seurat_obj@meta.data$c_gene)
+  Idents(Seurat_obj) <- factor(Seurat_obj@meta.data$c_call)
   names(Idents(Seurat_obj)) <- rownames(Seurat_obj@meta.data)
 
   full_isotypes <- grep('IGH[A-Z].*', levels(Idents(Seurat_obj)), value = T)
 
-  Seurat_obj_sub <- SubsetData(Seurat_obj,
-                               ident.use = full_isotypes
-                               )
+  Seurat_obj_sub <- subset(Seurat_obj,
+                           idents = full_isotypes)
+
   print('calculating markers for full isotypes')
   print(grep('IGH[A-Z].*', levels(Idents(Seurat_obj)), value = T))
   Full_iso_markers <- FindAllMarkers(object = Seurat_obj_sub,
-                                      only.pos = F,
-                                      min.pct = 0.25,
-                                      thresh.use = 0.25)
+                                     test.use = 'poisson', # another method
+                                     latent.vars = 'orig.ident', # adjust for sample
+                                     only.pos = F,
+                                     min.pct = 0.25,
+                                     thresh.use = 0.25)
 
   rimmi.rnaseq::markers_to_xls(Full_iso_markers, filename = 'Full_isotypes_DEGs')
   print('saved full isotypes as an excel spreadsheet')
@@ -84,11 +89,11 @@ Specific_isotypes_DEG <- function(Seurat_obj,
   Seurat_obj@meta.data <- Seurat_obj@meta.data[names(Idents(Seurat_obj)),]
 
   if (!is.null(clusters)){
-    Seurat_obj <- SubsetData(Seurat_obj,
-                             ident.use = clusters)
+    Seurat_obj <- subset(Seurat_obj,
+                         idents = clusters)
   }
   # replace cell identity from cluster to isotype
-  Idents(Seurat_obj) <- factor(Seurat_obj@meta.data$c_gene)
+  Idents(Seurat_obj) <- factor(Seurat_obj@meta.data$c_call)
   names(Idents(Seurat_obj)) <- rownames(Seurat_obj@meta.data)
 
   isotypes <- grep('IGH[A-Z].*', levels(Idents(Seurat_obj)), value = T)
@@ -99,11 +104,13 @@ Specific_isotypes_DEG <- function(Seurat_obj,
   print('calculating markers for specific isotypes')
   print(grep('IGH[A-Z].*', levels(Idents(Seurat_obj)), value = T))
   iso_markers <- FindMarkers(object = Seurat_obj_sub,
-                                   ident.1 = iso1,
-                                   ident.2 = iso2,
-                                   only.pos = F,
-                                   min.pct = 0.25,
-                                   thresh.use = 0.25)
+                             test.use = 'poisson', # another method
+                             latent.vars = 'orig.ident', # adjust for sample
+                             ident.1 = iso1,
+                             ident.2 = iso2,
+                             only.pos = F,
+                             min.pct = 0.25,
+                             thresh.use = 0.25)
 
   write.csv(iso_markers,
             file = filename,
@@ -137,10 +144,10 @@ pull_isotype <- function(Seurat_obj,
 
   if (is.null(clusters)){
   iso.cells <- rownames(
-    Seurat_obj@meta.data)[Seurat_obj@meta.data$c_gene %in% isotypes]
+    Seurat_obj@meta.data)[Seurat_obj@meta.data$c_call %in% isotypes]
   } else{
     iso.cells <- rownames(
-      Seurat_obj@meta.data)[(Seurat_obj@meta.data$c_gene %in% isotypes) & (Idents(Seurat_obj) %in% clusters)]
+      Seurat_obj@meta.data)[(Seurat_obj@meta.data$c_call %in% isotypes) & (Idents(Seurat_obj) %in% clusters)]
   }
   iso.cells
 }
@@ -169,10 +176,10 @@ pull_clonotype <- function(Seurat_obj,
 
   if (is.null(clusters)){
     clono.cells <- rownames(
-      Seurat_obj@meta.data)[Seurat_obj@meta.data$clonotype_id %in% clonotypes]
+      Seurat_obj@meta.data)[Seurat_obj@meta.data$clone_id %in% clonotypes]
   } else{
     clono.cells <- rownames(
-      Seurat_obj@meta.data)[(Seurat_obj@meta.data$clonotype_id %in% clonotypes) & (Idents(Seurat_obj) %in% clusters)]
+      Seurat_obj@meta.data)[(Seurat_obj@meta.data$clone_id %in% clonotypes) & (Idents(Seurat_obj) %in% clusters)]
   }
   clono.cells
 }
