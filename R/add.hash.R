@@ -99,7 +99,7 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name, quantile_theshold = 0
     ggsave(paste0(sample_name, '_FeatureScatter_QC15.jpg'), Feat, width = 15, height = 12)
 
     Idents(Seurat_obj.hashtag) <- Seurat_obj.hashtag@meta.data$HTO_classification
-
+    Seurat_obj.hashtag$HTO_classification_short <- gsub('-|[A-Z]+','', Seurat_obj.hashtag$HTO_classification)
     hto.heatmap(Seurat_obj.hashtag)
 
     Vld <- VlnPlot(Seurat_obj.hashtag, features = "nCount_RNA", pt.size = 0.1, log = TRUE)+
@@ -113,13 +113,13 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name, quantile_theshold = 0
                 Seurat_obj.hashtag@meta.data[, c('nCount_HTO', 'nFeature_HTO', 'HTO_maxID',
                                                  'HTO_secondID', 'HTO_margin', 'HTO_classification',
                                                  'HTO_classification.global', 'hash.ID')],
-                by = 0,
+                by = 'row.names',
                 all.x = T)
 
   rownames(meta) <- meta$Row.names
   meta$Row.names <- NULL
 
-  Seurat_obj@meta.data <- meta
+  Seurat_obj@meta.data <- meta[Cells(Seurat_obj),]
 
   Seurat_obj
 }
@@ -167,7 +167,6 @@ throw_away_tags <- function(Seurat_obj,
 hto.heatmap <- function(Seurat_obj.hashtag){
   library(ComplexHeatmap)
 
-  Seurat_obj.hashtag$HTO_classification_short <- gsub('-|[A-Z]+','', Seurat_obj.hashtag$HTO_classification)
   hto.mat <- Seurat_obj.hashtag@assays$HTO@data[1:5,]
   rownames(hto.mat) <- gsub('[A-Z]|-', '', rownames(hto.mat))
   tagshort <- Seurat_obj.hashtag$HTO_classification_short
