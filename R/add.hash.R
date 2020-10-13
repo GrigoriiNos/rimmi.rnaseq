@@ -165,6 +165,9 @@ throw_away_tags <- function(Seurat_obj,
 #' @export
 
 hto.heatmap <- function(Seurat_obj.hashtag){
+  library(ComplexHeatmap)
+
+  Seurat_obj.hashtag$HTO_classification_short <- gsub('-|[A-Z]+','', Seurat_obj.hashtag$HTO_classification)
   hto.mat <- Seurat_obj.hashtag@assays$HTO@data[1:5,]
   rownames(hto.mat) <- gsub('[A-Z]|-', '', rownames(hto.mat))
   tagshort <- Seurat_obj.hashtag$HTO_classification_short
