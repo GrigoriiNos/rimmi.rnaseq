@@ -116,6 +116,7 @@ Hglm.deg <- function(Seurat_obj,
 pseudo.bulk.DEG <- function(Seurat_sub.obj,
                             sample = 'orig.ident',
                             condition = 'condition',
+                            fitType = 'local',
                             show.genes = c('CCL19', 'CCL21A')){
 
   collapsed.list <- lapply(Seurat::SplitObject(Seurat_sub.obj, sample),
@@ -136,12 +137,17 @@ pseudo.bulk.DEG <- function(Seurat_sub.obj,
 
   rownames(design) <- 1:nrow(design)
 
+
   dds <- DESeqDataSetFromMatrix(countData=counts,
                                 colData=design,
                                 design=model.matrix(~design[condition][,1]),
                                 tidy = TRUE)
 
-  dds <- DESeq(dds)
+
+  dds <- DESeq(dds,
+               fitType = fitType
+               )
+
   res <- as.data.frame(results(dds)) %>%
     rownames_to_column('gene')
 

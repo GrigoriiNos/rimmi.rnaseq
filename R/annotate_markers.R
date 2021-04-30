@@ -21,9 +21,50 @@
 
 annotate_markers <- function(markers_table,
                              X = 50,
+                             method = 'gprofiler',
                              organism = 'hsapiens',
                              reg = 'up'){
+
   library(gProfileR)
+  library(enrichR)
+
+  enrich <- function(df, method=method){
+    gprofiler1 <- function(df){
+      x <- gprofiler(df$gene, organism = organism)
+      x$cluster <- df$cluster[1]
+      x
+    }
+
+    enrichr1 <- function(df){
+      dbs <- c("GO_Biological_Process_2018",
+               "GO_Molecular_Function_2018", "Transcription_Factor_PPIs",
+               "Human_Gene_Atlas", "Ligand_Perturbations_from_GEO_down",
+               "KEGG_2019_Human","Reactome_2016", "WikiPathways_2016",
+               "RNA-Seq_Disease_Gene_and_Drug_Signatures_from_GEO",
+               "TRRUST_Transcription_Factors_2019")
+
+      geneset <- df$gene
+
+      enriched <- enrichr(toupper(geneset), dbs)
+
+      enriched <- lapply(1:length(enriched), function(i){
+        enriched[[i]]$database <- dbs[i]
+
+        enriched[[i]]
+      }
+      )
+
+      enriched <- bind_rows(enriched)
+      enriched$cluster <- df$cluster[1]
+
+      enriched %>% filter(str_count(Genes, ';') != 0)
+    }
+    if (method == 'gprofiler'){
+      gprofiler1(df)
+    } else if (method == 'enrichr'){
+      enrichr1(df)
+    }
+  }
 
   ###
   if (reg == 'up'){
@@ -31,16 +72,28 @@ annotate_markers <- function(markers_table,
       group_by(cluster) %>%
       filter(p_val_adj < 0.05 & avg_logFC > 0) %>%
       top_n(X, abs(avg_logFC)) %>%
-      dplyr::select(gene) %>%
-      do(gprofiler(., organism = organism))
-  }
-  if (reg == 'down'){
+      dplyr::select(gene)
+  } else if (reg == 'down'){
     q <- markers_table %>%
       group_by(cluster) %>%
       filter(p_val_adj < 0.05 & avg_logFC < 0) %>%
       top_n(X, abs(avg_logFC)) %>%
-      dplyr::select(gene) %>%
-      do(gprofiler(., organism = organism))
+      dplyr::select(gene)
+    }
+
+  report <- tibble()
+  for (cl in unique(q$cluster)){
+    try(
+      report <- rbind(report, enrich(df = q %>% filter(cluster == cl) #%>% pull(gene)
+                                     ,
+                                     method=method))
+      )
   }
-  return(q)
+  return(report)
 }
+
+
+
+
+
+

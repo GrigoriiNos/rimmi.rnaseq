@@ -8,6 +8,7 @@ pseudo.bulk.DEG(
   Seurat_sub.obj,
   sample = "orig.ident",
   condition = "condition",
+  fitType = "local",
   show.genes = c("CCL19", "CCL21A")
 )
 }

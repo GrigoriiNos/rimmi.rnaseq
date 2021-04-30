@@ -4,7 +4,13 @@
 \alias{add_hash}
 \title{Merge cell hashcoding demultiplexed data with GEX Seurat 3 object with VDJ metadata}
 \usage{
-add_hash(hash.matrix, Seurat_obj, sample_name, quantile_theshold = 0.99)
+add_hash(
+  hash.matrix,
+  Seurat_obj,
+  sample_name,
+  quantile_theshold = 0.99,
+  method = c("HTODemux", "MULTIhash")
+)
 }
 \arguments{
 \item{hash.matrix}{a cellular bacrode vs hashtags matrix}

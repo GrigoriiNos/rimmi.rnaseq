@@ -4,14 +4,37 @@
 \alias{volcano_pl}
 \title{plot volcano plot 2}
 \usage{
-volcano_pl(response, ES_th = 0.5, title)
+volcano_pl(
+  response,
+  ES_th = 0.5,
+  ES_th_plot = 0.5,
+  log10pval = -log10(0.05),
+  y1 = 0,
+  y2 = 20,
+  x1 = -1,
+  x2 = 1,
+  title,
+  genes_plot = NA
+)
 }
 \arguments{
 \item{response}{table with DEG}
 
+\item{log10pval}{log10pval threshold to plot}
+
+\item{y1}{y1 limut}
+
+\item{y2}{y2 limit}
+
+\item{x1}{x1 limit}
+
+\item{x2}{x2 limit}
+
 \item{title}{the name of your plot}
 
-\item{logFC_th}{LogFC threshold}
+\item{genes_plot}{force these genes into the plot}
+
+\item{avg_logFC_th}{avg_logFC threshold}
 }
 \value{
 volcano plot

@@ -16,7 +16,7 @@
 #'
 #' @export
 
-add_hash <- function(hash.matrix, Seurat_obj, sample_name, quantile_theshold = 0.99){
+add_hash <- function(hash.matrix, Seurat_obj, sample_name, quantile_theshold = 0.99, method=c('HTODemux', 'MULTIhash')){
 
   #cells0tags <- which(apply(hash.matrix, 2, function(x) all(x == 0)))
   #tags0everywhere <- which(apply(hash.matrix, 1, function(x) all(x == 0)))
@@ -55,14 +55,17 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name, quantile_theshold = 0
   # clustering function for large applications You can also play with additional parameters (see
   # documentation for HTODemux()) to adjust the threshold for classification Here we are using the
   # default settings
-
-  Seurat_obj.hashtag <- HTODemux(Seurat_obj.hashtag, assay = "HTO", positive.quantile = quantile_theshold)
-  #Seurat_obj.hashtag <- MULTIseqDemux(Seurat_obj.hashtag, assay = "HTO")
-
-  # Global classification results
-  print(
-    table(Seurat_obj.hashtag$HTO_classification)
+  if (method == 'HTODemux'){
+    Seurat_obj.hashtag <- HTODemux(Seurat_obj.hashtag, assay = "HTO", positive.quantile = quantile_theshold)
+    print(
+      table(Seurat_obj.hashtag$HTO_classification)
     )
+  } else if (method == 'MULTIhash'){
+    Seurat_obj.hashtag <- MULTIseqDemux(Seurat_obj.hashtag, assay = "HTO")
+    print(
+      table(Seurat_obj.hashtag$MULTI_classification)
+    )
+  }
 
   # Group cells based on the max HTO signal
   Idents(Seurat_obj.hashtag) <- "HTO_maxID"
@@ -167,7 +170,8 @@ throw_away_tags <- function(Seurat_obj,
 hto.heatmap <- function(Seurat_obj.hashtag){
   library(ComplexHeatmap)
 
-  hto.mat <- Seurat_obj.hashtag@assays$HTO@data[1:5,]
+  hto.mat <- Seurat_obj.hashtag@assays$HTO@data
+  hto.mat <- hto.mat[rownames(hto.mat)!='unmapped',]
   rownames(hto.mat) <- gsub('[A-Z]|-', '', rownames(hto.mat))
   tagshort <- Seurat_obj.hashtag$HTO_classification_short
   tagglobal <- Seurat_obj.hashtag$HTO_classification.global
