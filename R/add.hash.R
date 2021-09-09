@@ -56,7 +56,7 @@ add_hash <- function(hash.matrix, Seurat_obj, sample_name, quantile_theshold = 0
   # documentation for HTODemux()) to adjust the threshold for classification Here we are using the
   # default settings
   if (method == 'HTODemux'){
-    Seurat_obj.hashtag <- HTODemux(Seurat_obj.hashtag, assay = "HTO", positive.quantile = quantile_theshold)
+    Seurat_obj.hashtag <- HTODemux(Seurat_obj.hashtag, init=2, assay = "HTO", positive.quantile = quantile_theshold)
     print(
       table(Seurat_obj.hashtag$HTO_classification)
     )
@@ -167,7 +167,7 @@ throw_away_tags <- function(Seurat_obj,
 #'
 #' @export
 
-hto.heatmap <- function(Seurat_obj.hashtag){
+hto.heatmap <- function(Seurat_obj.hashtag, scale=T){
   library(ComplexHeatmap)
 
   hto.mat <- Seurat_obj.hashtag@assays$HTO@data
@@ -176,6 +176,10 @@ hto.heatmap <- function(Seurat_obj.hashtag){
   tagshort <- Seurat_obj.hashtag$HTO_classification_short
   tagglobal <- Seurat_obj.hashtag$HTO_classification.global
 
+  if (scale){
+    hto.mat <- t(scale(t(hto.mat)))
+  }
+
   tagsann <- HeatmapAnnotation(hto.class = tagshort,
                                global = tagglobal,
                                which = 'col',
@@ -183,7 +187,7 @@ hto.heatmap <- function(Seurat_obj.hashtag){
                                gap = unit(1, 'mm'))
 
   hmap <- Heatmap(
-    hto.mat,
+    hto.mat[rownames(hto.mat) != 'tag4',],
     column_order = order(tagshort),
     show_row_names = T,
     show_column_names = FALSE,

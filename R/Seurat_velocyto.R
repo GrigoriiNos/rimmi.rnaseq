@@ -84,8 +84,8 @@ preprocess_loom <- function(loom_path, Seurat_obj, emb){
   # intronic read (unspliced) expression matrix
   nmat <- ldat$unspliced
 
-  emat <- clean_spmat(emat, Seurat_obj)
-  nmat <- clean_spmat(nmat, Seurat_obj)
+  emat <- clean_spmat(emat, Seurat_obj, emb)
+  nmat <- clean_spmat(nmat, Seurat_obj, emb)
 
   # I'm not sure what this parameter does to be honest. 0.02 default
   # perform gamma fit on a top/bottom quantiles of expression magnitudes
@@ -135,8 +135,13 @@ Seurat2_velocyto <- function(rvel.cd, Seurat_obj, emb){
   emb <- as.data.frame(emb)
   emb <- emb[rownames(Seurat_obj@meta.data),]
   colnames(emb) <- c('UMAP1', 'UMAP2')
-  emb$cluster <- Seurat_obj@meta.data$res.0.6
-  Seurat_obj@dr$monocle <- NULL
+  emb$cluster <- Seurat_obj@meta.data$cell.types_1.5
+
+  emb <- emb[rownames(emb) %in% rownames(rvel.cd$cellKNN),]
+  emb <- emb[rownames(emb) %in% strict.qc,]
+
+  dim(emb)
+  #Seurat_obj@dr$monocle <- NULL
 
   gg <- ggplot(data = emb,
                aes(x = UMAP1, y = UMAP2, colour = cluster))+
@@ -173,3 +178,23 @@ Seurat2_velocyto <- function(rvel.cd, Seurat_obj, emb){
 
 }
 
+velocity_estimates_hack <- function(spliced, unspliced, avg_spliced, avg_unspliced, dists, ...)
+  emat <- filter.genes.by.cluster.expression(spliced,   cluster_labels, min.max.cluster.average = avg_spliced)
+nmat <- filter.genes.by.cluster.expression(unspliced, cluster_labels, min.max.cluster.average = avg_unspliced)
+dists <- as(dists, 'sparseMatrix')
+
+while (TRUE) {
+  vel <- gene.relative.velocity.estimates(emat, nmat, cell.dist = as.dist(dists), ...)
+
+  idx_avail <- apply(vel$current, 2, function(cell) all(!is.na(cell)))
+  idx_uniqu <- !duplicated(as.matrix(vel$current), MARGIN = 2)
+  keep_cells <- idx_avail & idx_uniqu
+  if (all(keep_cells)) break
+  if (!all(idx_avail)) message('Eliminating NA cells: ',        paste(colnames(emat)[!idx_avail], collapse = ', '))
+  if (!all(idx_uniqu)) message('Eliminating duplicate cells: ', paste(colnames(emat)[!idx_uniqu], collapse = ', '))
+  emat <- emat[, keep_cells, drop = FALSE]
+  nmat <- nmat[, keep_cells, drop = FALSE]
+  dists <- dists[keep_cells, keep_cells]
+}
+list(emat = emat, nmat = nmat, dists = dists, vel = vel)
+}

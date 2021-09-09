@@ -87,16 +87,24 @@ merge_loom <- function(loom1,
 #'
 #' @export
 
-clean_spmat <- function(mat, Seurat_obj){
+clean_spmat <- function(mat, Seurat_obj, emb, sample){
   print('trimming cellular barcodes')
+
   colnames(mat) <- gsub('possorted_genome_bam_.*:|x|[A-Z][0-9]{2}:', '', colnames((mat)))
+
+  colnames(mat) <- paste0('A',gsub('.+-|\\.loom','', sample), '_', colnames(mat))
 
   print(paste0('filtering ', sum(duplicated(rownames(mat))), ' dublicated genes'))
   mat <- mat[!duplicated(rownames(mat)),]
 
-  # subset dead and bad quality cells
-  mat <- mat[,colnames(mat) %in% colnames(Seurat_obj@data)]
+  notnas <- colSums(is.na(mat))==0
+  mat <- mat[, notnas]
 
-  mat <- mat[, colnames(mat) %in% colnames(Seurat_obj@data)]
+  #colnames(mat) <- gsub('SJ-2365-Adam-gex-', 'A', colnames(mat))
+  #colnames(mat) <- gsub(':', '_', colnames(mat))
+  #colnames(mat) <- gsub('x', '', colnames(mat))
+  # subset dead and bad quality cells
+  mat <- mat[,colnames(mat) %in% rownames(emb)]
+
   mat
 }
