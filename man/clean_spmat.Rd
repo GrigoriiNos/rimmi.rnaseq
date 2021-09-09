@@ -4,7 +4,7 @@
 \alias{clean_spmat}
 \title{Run Velocyto analysis on your Seurat2 object}
 \usage{
-clean_spmat(mat, Seurat_obj)
+clean_spmat(mat, Seurat_obj, emb, sample)
 }
 \arguments{
 \item{mat}{matrix}

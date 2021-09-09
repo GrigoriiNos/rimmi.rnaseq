@@ -4,7 +4,7 @@
 \alias{hto.heatmap}
 \title{hto heatmap}
 \usage{
-hto.heatmap(Seurat_obj.hashtag)
+hto.heatmap(Seurat_obj.hashtag, scale = T)
 }
 \arguments{
 \item{Seurat_obj.hashtag}{Seurat object}

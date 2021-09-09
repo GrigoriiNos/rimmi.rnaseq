@@ -178,7 +178,7 @@ Seurat2_velocyto <- function(rvel.cd, Seurat_obj, emb){
 
 }
 
-velocity_estimates_hack <- function(spliced, unspliced, avg_spliced, avg_unspliced, dists, ...)
+velocity_estimates_hack <- function(spliced, unspliced, avg_spliced, avg_unspliced, dists, ...){
   emat <- filter.genes.by.cluster.expression(spliced,   cluster_labels, min.max.cluster.average = avg_spliced)
 nmat <- filter.genes.by.cluster.expression(unspliced, cluster_labels, min.max.cluster.average = avg_unspliced)
 dists <- as(dists, 'sparseMatrix')

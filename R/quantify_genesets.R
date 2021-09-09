@@ -20,7 +20,6 @@ quantify_genesets <- function(Seurat_obj, genesets, reset_genesets=FALSE){
     throw('genesets must be a names list')
   }
 
-
   genesets <- lapply(genesets, function(gset) gset[gset %in% rownames(Seurat_obj@assays$RNA@counts)])
 
   DefaultAssay(Seurat_obj) <- 'RNA'
